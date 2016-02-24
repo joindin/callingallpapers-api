@@ -1,0 +1,518 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>API Reference</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #151515;
+  background-color: #ac4142;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #505050;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #d0d0d0;
+}
+.highlight .p, .highlight .pi {
+  color: #d0d0d0;
+}
+.highlight .gi {
+  color: #90a959;
+}
+.highlight .gd {
+  color: #ac4142;
+}
+.highlight .gh {
+  color: #6a9fb5;
+  background-color: #151515;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #aa759f;
+}
+.highlight .kc {
+  color: #d28445;
+}
+.highlight .kt {
+  color: #d28445;
+}
+.highlight .kd {
+  color: #d28445;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #90a959;
+}
+.highlight .sr {
+  color: #75b5aa;
+}
+.highlight .si {
+  color: #8f5536;
+}
+.highlight .se {
+  color: #8f5536;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #6a9fb5;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #90a959;
+}
+.highlight .ss {
+  color: #90a959;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[&quot;php&quot;]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.png" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="php">php</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to the API powering <a href="https://api.callingallpapers.com">callingallpapers.com</a>!
+You can use this API to access Call for Paper (CfP) endpoints to get information
+on currently open CfPs.</p>
+
+<p>We currently have examples for language bindings in PHP but you can consume this API
+with any language you like. You can view code examples in the dark area to the right,
+and you can switch the programming language of the examples with the tabs in the top right.</p>
+
+<p>This API documentation was created with <a href="https://github.com/tripit/slate">Slate</a>.</p>
+
+<h1 id="authentication">Authentication</h1>
+
+<blockquote>
+<p>To authorize, use this code:</p>
+</blockquote>
+<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
+    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
+]]);
+</code></pre>
+
+<blockquote>
+<p>Make sure to replace <code class="prettyprint">myVeryOwnApiKey</code> with your API key.</p>
+</blockquote>
+
+<p>Callingallpapers uses API keys to allow write access to the API. You can
+request your Callingallpapers-API key by sending an Email to
+<a href="mailto:apikeyrequest@callingallpapers.com">apikeyrequest@callingallpapers.com</a>
+together with a short description what you&rsquo;d like to do with it.</p>
+
+<p>Callingallpapers expects for the API key to be included in all API requests to
+the server (except GET) in a header that looks like the following:</p>
+
+<p><code class="prettyprint">Authorization: myVEryOnwApiKey</code></p>
+
+<aside class="notice">
+Remember to replace <code>myVeryOwnApiKey</code> with your personal API key.
+</aside>
+
+<h1 id="calls-for-papers">Calls for Papers</h1>
+
+<h2 id="get-all-calls-for-papers">Get All Calls for Papers</h2>
+<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
+    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
+]]);
+$result = $client-&gt;request('GET', 'https://example.com/v1/cfp');
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"cfps"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"_rel"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"cfp_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1/cfp/da39a3ee5e6b4b0d3255bfef95601890afd80709"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"dateCfpEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-02T13:24:35+02:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCfpStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-01T12:13:14+02:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateEventEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-001-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateEventStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-001-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"eventUri"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"iconUri"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lastChange"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-18T12:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">""</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe/Berlin"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"count"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all CfPs.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET http://example.com/v1/cfp</code></p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<p>Not yet implemented!</p>
+
+<h2 id="get-a-specific-cfp">Get a Specific CfP</h2>
+<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
+    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
+]]);
+$result = $client-&gt;request('GET', 'https://example.com/v1/cfp/<span class="nt">&lt;HASH&gt;</span>');
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"cfps"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"_rel"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"cfp_uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"v1/cfp/&lt;HASH&gt;"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="nt">"dateCfpEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-02T13:24:35+02:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateCfpStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-01T12:13:14+02:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateEventEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-001-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateEventStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-001-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"eventUri"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"iconUri"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"lastChange"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-02-18T12:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"latitude"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"longitude"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"foo"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"tags"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="s2">""</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Europe/Berlin"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"uri"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://example.com"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"meta"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"count"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a specific CfP. The CfP is identified by a hash which is
+the sha1-sum of the URI of the event that opened the CfP.</p>
+
+<h2 id="create-a-new-cfp">Create a new CfP</h2>
+<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
+    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
+]]);
+$result = $client-&gt;request('POST', 'https://example.com/v1/cfp', [
+    'form_params' =&gt; <span class="nt">&lt;POST-Parameters&gt;</span>
+]);
+</code></pre>
+
+<blockquote>
+<p>The above command returns a Location Header with the URL of the newly created resource</p>
+</blockquote>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">POST http://example.com/v1/cfp</code></p>
+
+<h3 id="post-parameters">POST Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dateCfpEnd</td>
+<td>*</td>
+<td>The date the CfP ends. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>dateCfpStart</td>
+<td>*</td>
+<td>The date the CfP starts. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>dateEventEnd</td>
+<td></td>
+<td>The date the Event ends. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>dateEventStart</td>
+<td></td>
+<td>The date the Event starts. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>description</td>
+<td></td>
+<td>A description of the Conference</td>
+</tr>
+<tr>
+<td>eventUri</td>
+<td>*</td>
+<td>The URI of the events homepage</td>
+</tr>
+<tr>
+<td>iconUri</td>
+<td></td>
+<td>an URI where we can find an icon for the conference. squared is prefered ;)</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td></td>
+<td>The latitude of the conference-venue</td>
+</tr>
+<tr>
+<td>location</td>
+<td></td>
+<td>The longitude of the conference-venue</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td></td>
+<td>The name of the conference-venue</td>
+</tr>
+<tr>
+<td>name</td>
+<td>*</td>
+<td>The name of the conference</td>
+</tr>
+<tr>
+<td>tags</td>
+<td></td>
+<td>A comma-separated list of tags for the event</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td></td>
+<td>A timezone name. All dates are assumed to be in that timezone. If no timezone is given &ldquo;UTC&rdquo; is assumed</td>
+</tr>
+<tr>
+<td>uri</td>
+<td>*</td>
+<td>the URI of the CfP</td>
+</tr>
+</tbody></table>
+
+<h2 id="update-an-existing-cfp">Update an existing CfP</h2>
+<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
+    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
+]]);
+$result = $client-&gt;request('PUT', 'https://example.com/v1/cfp/<span class="nt">&lt;HASH&gt;</span>', [
+    'form_params' =&gt; <span class="nt">&lt;PUT-Parameters&gt;</span>
+]);
+</code></pre>
+
+<blockquote>
+<p>The above command returns a Location Header with the URL of the newly created resource</p>
+</blockquote>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">PUT http://example.com/v1/cfp/&lt;HASH&gt;</code></p>
+
+<h3 id="put-parameters">PUT Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>dateCfpEnd</td>
+<td>*</td>
+<td>The date the CfP ends. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>dateCfpStart</td>
+<td>*</td>
+<td>The date the CfP starts. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>dateEventEnd</td>
+<td></td>
+<td>The date the Event ends. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>dateEventStart</td>
+<td></td>
+<td>The date the Event starts. This needs to be a date that can be parsed by php&rsquo;s <code class="prettyprint">date</code>function</td>
+</tr>
+<tr>
+<td>description</td>
+<td></td>
+<td>A description of the Conference</td>
+</tr>
+<tr>
+<td>eventUri</td>
+<td>*</td>
+<td>The URI of the events homepage</td>
+</tr>
+<tr>
+<td>iconUri</td>
+<td></td>
+<td>an URI where we can find an icon for the conference. squared is prefered ;)</td>
+</tr>
+<tr>
+<td>latitude</td>
+<td></td>
+<td>The latitude of the conference-venue</td>
+</tr>
+<tr>
+<td>location</td>
+<td></td>
+<td>The longitude of the conference-venue</td>
+</tr>
+<tr>
+<td>longitude</td>
+<td></td>
+<td>The name of the conference-venue</td>
+</tr>
+<tr>
+<td>name</td>
+<td>*</td>
+<td>The name of the conference</td>
+</tr>
+<tr>
+<td>tags</td>
+<td></td>
+<td>A comma-separated list of tags for the event</td>
+</tr>
+<tr>
+<td>timezone</td>
+<td></td>
+<td>A timezone name. All dates are assumed to be in that timezone. If no timezone is given &ldquo;UTC&rdquo; is assumed</td>
+</tr>
+<tr>
+<td>uri</td>
+<td>*</td>
+<td>the URI of the CfP</td>
+</tr>
+</tbody></table>
+
+          <h1 id="errors">Errors</h1>
+
+<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
+
+<p>The Kittn API uses the following error codes:</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Your request sucks</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; Your API key is wrong</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found &ndash; The specified kitten could not be found</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+</tr>
+<tr>
+<td>406</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone &ndash; The kitten requested has been removed from our servers</td>
+</tr>
+<tr>
+<td>418</td>
+<td>I&rsquo;m a teapot</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="php">php</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
