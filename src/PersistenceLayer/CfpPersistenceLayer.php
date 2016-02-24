@@ -92,51 +92,60 @@ class CfpPersistenceLayer
         if (! $fetchHash) {
             throw new \UnexpectedValueException('No Hash given', 400);
         }
-        if ($this->select($fetchHash)->count() != 1) {
+        $oldValues = $this->select($fetchHash);
+        if ($oldValues->count() != 1) {
             throw new \UnexpectedValueException('There is no CFP with this URL.', 404);
         }
+        $statementElements = [];
+        $values = [];
+        $oldValues = $oldValues->current();
+        $options = [
+            'dateCfpStart',
+            'dateCfpEnd',
+            'name',
+            'uri',
+            'hash',
+            'timezone',
+            'dateEventStart',
+            'dateEventEnd',
+            'description',
+            'eventUri',
+            'iconUri',
+            'latitude',
+            'longitude',
+            'location',
+            'tags',
+        ];
+
+        foreach($options as $option) {
+            $method = 'get' . $option;
+            if ($cfp->$method() != $oldValues->$method()) {
+                $statementElements[] = '`' . $option . '` = :' . $option;
+                $values[$option]     = $cfp->$method();
+                if ($values[$option] instanceof \DateTimeInterface) {
+                    $values[$option] = $values[$option]->format('c');
+                }
+                if (is_array($values[$option])) {
+                    $values[$option] = implode(',', $values[$option]);
+                }
+            }
+        }
+
+        // No values to update, just, return
+        if (! $values) {
+            return $cfp->getHash();
+        }
+
         $statement = 'UPDATE `cfp` SET '
-                   . '`dateCfpStart` = :dateCfpStart,'
-                   . '`dateCfpEnd` = :dateCfpEnd,'
-                   . '`name` = :name,'
-                   . '`uri` = :uri,'
-                   . '`hash` = :hash,'
-                   . '`timezone` = :timezone, '
-                   . '`dateEventStart` = :dateEventStart, '
-                   . '`dateEventEnd` = :dateEventEnd, '
-                   . '`description` = :description, '
-                   . '`eventUri` = :eventUri, '
-                   . '`iconUri` = :iconUri, '
-                   . '`latitude` = :latitude, '
-                   . '`longitude` = :longitude, '
-                   . '`location` = :location, '
-                   . '`tags` = :tags, '
+                   . implode(',', $statementElements) . ','
                    . '`lastUpdate` = :lastUpdate '
                    . 'WHERE `hash` = :fetchHash';
         $statement = $this->pdo->prepare($statement);
-
-        $values = [
-            'dateCfpStart'   => $cfp->getDateCfpStart()->format('c'),
-            'dateCfpEnd'     => $cfp->getDateCfpEnd()->format('c'),
-            'dateEventStart' => $cfp->getDateEventStart()->format('c'),
-            'dateEventEnd'   => $cfp->getDateEventEnd()->format('c'),
-            'name'           => $cfp->getName(),
-            'uri'            => $cfp->getUri(),
-            'hash'           => $cfp->getHash(),
-            'timezone'       => $cfp->getTimezone()->getName(),
-            'description'    => $cfp->getDescription(),
-            'eventUri'       => $cfp->getEventUri(),
-            'iconUri'        => $cfp->getIconUri(),
-            'latitude'       => $cfp->getLatitude(),
-            'longitude'      => $cfp->getLongitude(),
-            'location'       => $cfp->getLocation(),
-            'tags'           => implode(',', $cfp->getTags()),
-            'fetchHash'      => $fetchHash,
-            'lastUpdate'     => (new \DateTime('now', new \DateTimezone('UTC')))->format('c'),
-        ];
+        $values['fetchHash']  = $fetchHash;
+        $values['lastUpdate'] = (new \DateTime('now', new \DateTimezone('UTC')))->format('c');
 
         if ($statement->execute($values)) {
-            return $values['hash'];
+            return $cfp->getHash();
         }
 
         throw new \UnexpectedValueException('The CfP could not be updated', 400);
@@ -160,11 +169,9 @@ class CfpPersistenceLayer
         $statement->execute($values);
         $content = $statement->fetchAll();
         if (count($content) < 1) {
-            $this->logger->addDebug('No CFPs found for hash', ['hash' => $hash]);
             throw new \UnexpectedValueException('No CFPs found', 404);
         }
 
-        $this->logger->addDebug('Found ' . count($content) . ' elements with hash', ['hash' => $hash]);
         foreach ($content as $item) {
             $cfp = new \Callingallpapers\Api\Entity\Cfp();
             $cfp->setName($item['name']);

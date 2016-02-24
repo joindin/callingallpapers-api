@@ -67,7 +67,7 @@ $app->put('/v1/cfp/{hash}', function (
 ) use ($app){
     $params = $request->getParsedBody();
 
-    $cfpFactory = new CfpFactory();
+    $cfpFactory = new \Callingallpapers\Api\Service\CfpFactory();
     $cfp = $cfpFactory->createCfp($params);
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
