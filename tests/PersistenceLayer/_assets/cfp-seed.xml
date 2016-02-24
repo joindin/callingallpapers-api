@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <table name="cfp">
+        <column>id</column>
+        <column>hash</column>
+        <column>dateCfpStart</column>
+        <column>dateCfpEnd</column>
+        <column>dateEventStart</column>
+        <column>dateEventEnd</column>
+        <column>timezone</column>
+        <column>description</column>
+        <column>name</column>
+        <column>uri</column>
+        <column>eventUri</column>
+        <column>iconUri</column>
+        <column>latitude</column>
+        <column>longitude</column>
+        <column>location</column>
+        <column>tags</column>
+        <column>lastUpdate</column>
+        <row>
+            <value>1</value>
+            <value>ff</value>
+            <value>2016-02-01 12:00:00+01:00</value>
+            <value>2016-04-01 12:00:00+01:00</value>
+            <value>2016-05-01 12:00:00+02:00</value>
+            <value>2016-06-01 12:00:00+02:00</value>
+            <value>Europe/Berlin</value>
+            <value>Bäschreibüng</value>
+            <value>cfp1</value>
+            <value>http://cfp.example.com</value>
+            <value>http://example.com/2016</value>
+            <value>http://example.com/2016/icon.png</value>
+            <value>50.00</value>
+            <value>8.00</value>
+            <value>irgendwo im Taunus</value>
+            <value>cfp,test,tag</value>
+            <value>2016-06-01 12:00:00+02:00</value>
+        </row>
+        <row>
+            <value>2</value>
+            <value>fd</value>
+            <value>2016-02-02 12:00:00-04:00</value>
+            <value>2016-04-02 12:00:00-04:00</value>
+            <value>2016-05-02 12:00:00-05:00</value>
+            <value>2016-06-02 12:00:00-05:00</value>
+            <value>America/Toronto</value>
+            <value>Bäschreibüng</value>
+            <value>cfp2</value>
+            <value>http://cfp.example.com</value>
+            <value>http://example.com/2015</value>
+            <value>http://example.com/2015/icon.png</value>
+            <value>50.00</value>
+            <value>-50.00</value>
+            <value>somewhere in northamerica</value>
+            <value>cfp,test,tag</value>
+            <value>2016-06-01 12:00:00+02:00</value>
+        </row>
+    </table>
+</dataset>
