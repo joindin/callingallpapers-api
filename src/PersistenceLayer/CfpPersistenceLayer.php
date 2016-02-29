@@ -41,12 +41,11 @@ class CfpPersistenceLayer
 
     public function insert(Cfp $cfp)
     {
-
         $cfpExists = false;
         try {
             $this->select($cfp->getHash());
             $cfpExists = true;
-        } catch(\UnexpectedValueException $e) {
+        } catch (\UnexpectedValueException $e) {
             $cfpExists = false;
         }
 
@@ -117,7 +116,7 @@ class CfpPersistenceLayer
             'tags',
         ];
 
-        foreach($options as $option) {
+        foreach ($options as $option) {
             $method = 'get' . $option;
             if ($cfp->$method() != $oldValues->$method()) {
                 $statementElements[] = '`' . $option . '` = :' . $option;

@@ -202,4 +202,3 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $cpl->update($cfp, null);
     }
 }
-

@@ -277,5 +277,4 @@ class Cfp
     {
         $this->lastUpdate = $date;
     }
-
 }

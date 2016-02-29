@@ -65,6 +65,5 @@ class CfpListMapper
                 'count' => $list->count(),
             ]
         ];
-
     }
 }

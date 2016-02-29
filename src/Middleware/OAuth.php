@@ -55,8 +55,7 @@ class OAuth
         ServerRequestInterface $request,
         ResponseInterface $response,
         callable $next
-    )
-    {
+    ) {
         $auth = $request->getHeader('Authenticate');
         if ($request->getMethod() === 'GET') {
             // Get is allowed without authentication
@@ -92,6 +91,5 @@ class OAuth
         $request = $request->withAttribute('user', $user['user']);
 
         return $next($request, $response);
-
     }
 }
