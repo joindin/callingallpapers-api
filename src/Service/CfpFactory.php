@@ -217,8 +217,8 @@ class CfpFactory
             return;
         }
 
-        $cfp->setTags(array_filter($array['tags'], function ($item) {
+        $cfp->setTags(array_map(function ($item) {
             return filter_var($item, FILTER_SANITIZE_STRING);
-        }));
+        }, $array['tags']));
     }
 }
