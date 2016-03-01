@@ -61,65 +61,164 @@ class CfpFactory
             ), 400);
         }
         $cfp = new Cfp();
-        $cfp->setName(filter_var($params['name'], FILTER_SANITIZE_STRING));
-        $cfp->setDateCfpStart(new DateTimeImmutable($params['dateCfpStart']));
-        $cfp->setDateCfpEnd(new DateTimeImmutable($params['dateCfpEnd']));
-        $cfp->setTimezone(filter_var($params['timezone'], FILTER_SANITIZE_STRING));
-        $cfp->setUri(filter_var($params['uri'], FILTER_VALIDATE_URL));
-        $cfp->setEventUri(filter_var($params['eventUri'], FILTER_VALIDATE_URL));
 
-        if (isset($params['dateEventStart'])) {
-            $cfp->setDateEventStart(new DateTimeImmutable($params['dateEventStart']));
+        self::setName($cfp, $params);
+        self::setDateCfpStart($cfp, $params);
+        self::setDateCfpEnd($cfp, $params);
+        self::setTimezone($cfp, $params);
+        self::setUri($cfp, $params);
+        self::setEventUri($cfp, $params);
+        self::setDateEventStart($cfp, $params);
+        self::setDateEventEnd($cfp, $params);
+        self::setIconUri($cfp, $params);
+        self::setDescription($cfp, $params);
+        self::setLocation($cfp, $params);
+        self::setGeolocation($cfp, $params);
+        self::setTags($cfp, $params);
+
+        return $cfp;
+    }
+
+    public static function setName(Cfp $cfp, array $array)
+    {
+        if (! isset($array['name'])) {
+            throw new \InvalidArgumentException('Name has to be specified');
+        }
+        $cfp->setName(filter_var($array['name'], FILTER_SANITIZE_STRING));
+    }
+
+    public static function setDateCfpStart(Cfp $cfp, array $array)
+    {
+        if (! isset($array['dateCfpStart'])) {
+            throw new \InvalidArgumentException('CFP-StartDate has to be specified');
+        }
+        $cfp->setDateCfpStart(new DateTimeImmutable($array['dateCfpStart']));
+    }
+
+    public static function setDateCfpEnd(Cfp $cfp, array $array)
+    {
+        if (! isset($array['dateCfpEnd'])) {
+            throw new \InvalidArgumentException('CFP-EndDate has to be specified');
+        }
+        $cfp->setDateCfpEnd(new DateTimeImmutable($array['dateCfpEnd']));
+    }
+
+    public static function setTimezone(Cfp $cfp, array $array)
+    {
+        if (! isset($array['timezone'])) {
+            throw new \InvalidArgumentException('Timezone has to be specified');
+        }
+        $cfp->setTimezone(filter_var($array['timezone'], FILTER_SANITIZE_STRING));
+    }
+
+    public static function setUri(Cfp $cfp, array $array)
+    {
+        if (! isset($array['uri'])) {
+            throw new \InvalidArgumentException('URI has to be specified');
+        }
+
+        $cfp->setUri(filter_var($array['uri'], FILTER_VALIDATE_URL));
+    }
+
+    public static function setEventUri(Cfp $cfp, array $array)
+    {
+        if (! isset($array['eventUri'])) {
+            throw new \InvalidArgumentException('Event-URI has to be specified');
+        }
+
+        $cfp->setEventUri(filter_var($array['eventUri'], FILTER_VALIDATE_URL));
+    }
+
+    public static function setDateEventStart(Cfp $cfp, array $array)
+    {
+        if (isset($array['dateEventStart'])) {
+            $cfp->setDateEventStart(new DateTimeImmutable($array['dateEventStart']));
         } else {
             $cfp->setDateEventStart(new DateTimeImmutable('0000-00-00 00:00:00+00:00'));
         }
-        if (isset($params['dateEventEnd'])) {
-            $cfp->setDateEventEnd(new DateTimeImmutable($params['dateEventEnd']));
+    }
+
+    public static function setDateEventEnd(Cfp $cfp, array $array)
+    {
+        if (isset($array['dateEventEnd'])) {
+            $cfp->setDateEventEnd(new DateTimeImmutable($array['dateEventEnd']));
         } else {
             $cfp->setDateEventEnd(new DateTimeImmutable('0000-00-00 00:00:00+00:00'));
         }
-        if (isset($params['iconUri'])) {
-            $cfp->setIconUri(filter_var($params['iconUri'],
-                FILTER_VALIDATE_URL));
-        }
-        if (isset($params['description'])) {
-            $cfp->setDescription(filter_var($params['description'],
-                FILTER_SANITIZE_STRING));
-        }
-        if (isset($params['location'])) {
-            $cfp->setLocation(filter_var($params['location'],
-                FILTER_SANITIZE_STRING));
-        }
-        if (isset($params['latitude']) && isset($params['longitude'])) {
-            $latitude  = filter_var($params['latitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-            $longitude = filter_var($params['longitude'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    }
 
-            if ($latitude > 90 || $latitude < -90) {
-                throw new \UnexpectedValueException(sprintf(
-                    'latitude has to be within a range of -90.0 to 90.0 bus is %1$f',
-                    $latitude
-                ), 400);
-            }
-
-            if ($longitude > 180 || $longitude < -180) {
-                throw new \UnexpectedValueException(sprintf(
-                    'longitude has to be within a range of -180.0 to 180.0 but is %1$f',
-                    $longitude
-                ), 400);
-            }
-
-            // TODO: Rewrite lat and long to be in the correct range
-
-            $cfp->setLatitude($latitude);
-            $cfp->setLongitude($longitude);
+    public static function setIconUri(Cfp $cfp, array $array)
+    {
+        if (! isset($array['iconUri'])) {
+            return;
         }
 
-        if (isset($params['tags'])) {
-            $cfp->setTags(array_filter($params['tags'], function ($item) {
-                return filter_var($item, FILTER_SANITIZE_STRING);
-            }));
+        $cfp->setIconUri(filter_var($array['iconUri'], FILTER_VALIDATE_URL));
+    }
+
+    public static function setDescription(Cfp $cfp, array $array)
+    {
+        if (! isset($array['description'])) {
+            return;
         }
 
-        return $cfp;
+        $cfp->setDescription(filter_var($array['description'], FILTER_SANITIZE_STRING));
+    }
+
+    public static function setLocation(Cfp $cfp, array $array)
+    {
+        if (! isset($array['location'])) {
+            return;
+        }
+
+        $cfp->setLocation(filter_var($array['location'], FILTER_SANITIZE_STRING));
+    }
+
+    public static function setGeolocation(Cfp $cfp, array $array)
+    {
+        if (! isset($array['latitude'])) {
+            return;
+        }
+
+        if (! isset($array['longitude'])) {
+            return;
+        }
+
+        $latitude  = filter_var($array['latitude'],
+            FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION);
+        $longitude = filter_var($array['longitude'],
+            FILTER_SANITIZE_NUMBER_FLOAT,
+            FILTER_FLAG_ALLOW_FRACTION);
+
+        if ($latitude > 90 || $latitude < - 90) {
+            throw new \UnexpectedValueException(sprintf(
+                'latitude has to be within a range of -90.0 to 90.0 bus is %1$f',
+                $latitude
+            ), 400);
+        }
+
+        if ($longitude > 180 || $longitude < - 180) {
+            throw new \UnexpectedValueException(sprintf(
+                'longitude has to be within a range of -180.0 to 180.0 but is %1$f',
+                $longitude
+            ), 400);
+        }
+
+        // TODO: Rewrite lat and long to be in the correct range
+
+        $cfp->setLatitude($latitude);
+        $cfp->setLongitude($longitude);
+    }
+
+    public static function setTags(Cfp $cfp, array $array)
+    {
+        if (! isset($array['tags'])) {
+            return;
+        }
+
+        $cfp->setTags(array_filter($array['tags'], function ($item) {
+            return filter_var($item, FILTER_SANITIZE_STRING);
+        }));
     }
 }
