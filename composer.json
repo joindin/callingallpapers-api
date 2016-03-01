@@ -15,5 +15,10 @@
         "psr-4" : {
             "CallingallpapersTest\\Api\\" : "tests/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.2",
+        "fabpot/php-cs-fixer": "^1.11",
+        "phpunit/dbunit": "^2.0"
     }
 }

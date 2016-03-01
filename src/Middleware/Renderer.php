@@ -54,14 +54,13 @@ class Renderer
         ServerRequestInterface $request,
         ResponseInterface $response,
         callable $next
-    )
-    {
+    ) {
         $accept = $request->getHeader('Accept');
         if (in_array('application/json', $accept)) {
             $jsonHelpers = new JsonHelpers($this->app->getContainer());
             $jsonHelpers->registerResponseView();
             $jsonHelpers->registerErrorHandlers();
-        } else if(in_array('text/calendar',$accept)) {
+        } elseif (in_array('text/calendar', $accept)) {
             $container = $this->app->getContainer();
             $container['view'] = function ($c) {
                 return new IcalendarRenderer();
@@ -84,6 +83,5 @@ class Renderer
             };
         }
         return $next($request, $response);
-
     }
 }

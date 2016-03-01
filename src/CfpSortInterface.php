@@ -42,5 +42,4 @@ interface CfpSortInterface
      * @return int;
      */
     public function sort(Cfp $first, Cfp $second);
-
 }

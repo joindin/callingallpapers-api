@@ -107,5 +107,4 @@ class CfpList implements \Iterator, \Countable
     {
         usort($this->cfps, [$sorter, 'sort']);
     }
-
 }
