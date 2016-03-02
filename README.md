@@ -7,3 +7,5 @@ The API that will power a future version of callingallpapers.com
 
 Contributions are welcome. For more information have a look at the
 [CONTRIBUTING-file](CONTRIBUTING.md)
+
+There even is a [documentation of the API](http://joindin.github.io/callingallpapers-api).
