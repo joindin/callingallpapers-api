@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * $Id$
+ *
+ * Copyright (c) 2008-2011 Andreas Heigl<andreas@heigl.org>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ * This is the ant-buildfile
+ *
+ * @category  php.ug
+ * @package   php.ug
+ * @author    Andreas Heigl <andreas@heigl.org>
+ * @copyright 2012 Andreas Heigl<andreas@heigl.org>
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
+ * @version   0.0
+ * @since     06.03.2012
+ */
+-->
+<project name="php.ug" default="build" basedir=".">
+
+    <property file="./build.property"/>
+    <property file="./build.property.dist"/>
+
+    <target name="update">
+        <echo message="Updating composer-binary"/>
+        <exec command="composer self-update"/>
+        <echo message="Updating Requirements"/>
+        <exec command="composer update" />
+    </target>
+
+    <target name="test">
+        <phpunit configuration="phpunit.xml.dist">
+            <formatter type = "plain" usefile = "false"/>
+            <batchtest>
+                <fileset dir = "src/module/Phpug/tests">
+                    <include name = "**/*Test*.php"/>
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+
+    <target name="build">
+
+    </target>
+
+    <target name="updatePhp">
+        <composer command="install"/>
+    </target>
+
+    <target name="updateAssets">
+        <exec command="bower install"/>
+    </target>
+
+    <target name="createDeployFolder">
+        <echo>Creating Deployment-Folder</echo>
+        <mkdir dir="${deploy.local_folder}" />
+        <copy todir="${deploy.local_folder}">
+            <fileset dir="." excludesfile=".deploy/deploy_exclude.property" includesfile=".deploy/deploy_include.property" />
+        </copy>
+    </target>
+
+    <target name="copyDeployFolderToServer">
+        <echo>Copying files to target ${deploy.target}</echo>
+        <exec command="ssh -i ${deploy.identity_file} ${deploy.user}@${deploy.target} 'mkdir -p ${deploy.location}'" />
+        <exec dir="${deploy.local_folder}" command="scp -i ${deploy.identity_file} -rv ./* ${deploy.user}@${deploy.target}:${deploy.location}" />
+    </target>
+
+    <target name="syncDeployFolderToServer">
+        <echo>Synching files to target ${deploy.target}</echo>
+        <exec command="ssh -i ${deploy.identity_file} ${deploy.user}@${deploy.target} 'mkdir -p ${deploy.location}'" />
+        <filesync destinationDir="${deploy.user}@${deploy.target}:${deploy.location}"
+                  rsyncPath="${deploy.path_to_rsync}"
+                  sourceDir="${deploy.local_folder}/."
+                  checksum="true"
+                  options="-e 'ssh -i ${deploy.identity_file}' -aKz"
+                />
+    </target>
+
+    <target name="callPostDeployScriptOnServer">
+        <echo>Calling post-deploy-script on target ${deploy.target}</echo>
+        <exec command="ssh -i ${deploy.identity_file} ${deploy.user}@${deploy.target} '${deploy.location}/${deploy.post_deploy_script}'"/>
+    </target>
+
+    <target name="callPreDeployScriptOnServer" >
+        <available property="deploy.pre_deploy_script_exists" file="${deploy.local_folder}/${deploy.pre_deploy_script}"/>
+        <if>
+            <isset property="deploy.pre_deploy_script_exists"/>
+            <then>
+                <echo>Calling pre-deploy-script on target ${deploy.target}</echo>
+                <loadfile property="deploy.pre_deploy_script_content" file="${deploy.local_folder}/${deploy.pre_deploy_script}"/>
+                <exec command="ssh  -i ${deploy.identity_file} ${deploy.user}@${deploy.target} '${deploy.pre_deploy_script_content}'"/>
+            </then>
+        </if>
+    </target>
+
+    <target name="deployFolderToServer">
+        <if>
+            <equals arg1="sync" arg2="${deploy.method}"/>
+            <then>
+                <phingcall inheritAll="true" target="syncDeployFolderToServer"/>
+            </then>
+            <elseif>
+                <equals arg1="copy" arg2="${deploy.method}"/>
+                <then>
+                    <phingcall target="copyDeployFolderToServer" inheritAll="true"/>
+                </then>
+            </elseif>
+        </if>
+    </target>
+
+    <target name="removeDeployFolder">
+        <delete dir="${deploy.local_folder}" includeemptydirs="true"/>
+    </target>
+
+    <target name="deploy" depends="update, updateAssets">
+        <echo>Deploying application</echo>
+        <phingcall inheritAll="true" target="createDeployFolder"/>
+        <phingcall inheritAll="true" target="callPreDeployScriptOnServer"/>
+        <phingcall inheritAll="true" target="deployFolderToServer"/>
+        <phingcall inheritAll="true" target="callPostDeployScriptOnServer"/>
+        <phingcall inheritAll="true" target="removeDeployFolder"/>
+    </target>
+
+</project>

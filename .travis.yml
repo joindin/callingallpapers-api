@@ -36,3 +36,5 @@ script:
   --dry-run ; fi
 after_script:
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
+- test $TRAVIS_BRANCH == "master" && test $EXECUTE_TEST_COVERALLS == 'true'; then ./vendor/bin/phing deploy; fi
+
