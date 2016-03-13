@@ -18,8 +18,6 @@ matrix:
   - php: nightly
   - php: hhvm-nightly
 before_install:
-- openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv
-  -in deploy-key.enc -out deploy-key -d
 - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini ||
   return 0 ; fi
 - composer self-update
