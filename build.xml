@@ -85,12 +85,12 @@
 
     <target name="syncDeployFolderToServer">
         <echo>Synching files to target ${deploy.target}</echo>
-        <exec command="ssh -o "StrictHostKeyChecking no" -i ${deploy.identity_file} ${deploy.user}@${deploy.target} 'mkdir -p ${deploy.location}'" />
+        <exec command="ssh -o StrictHostKeyChecking no -i ${deploy.identity_file} ${deploy.user}@${deploy.target} 'mkdir -p ${deploy.location}'" />
         <filesync destinationDir="${deploy.user}@${deploy.target}:${deploy.location}"
                   rsyncPath="${deploy.path_to_rsync}"
                   sourceDir="${deploy.local_folder}/."
                   checksum="true"
-                  options="-e 'ssh -o \"StrictHostKeyChecking no\" -i ${deploy.identity_file}' -aKz"
+                  options="-e 'ssh -o StrictHostKeyChecking no -i ${deploy.identity_file}' -aKz"
                 />
     </target>
 
