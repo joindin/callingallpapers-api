@@ -36,4 +36,4 @@ after_script:
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
 - if [ $TRAVIS_BRANCH == "master" ] && [ $EXECUTE_TEST_COVERALLS == 'true' ] ; then
   openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv
-  -in deploy-key.enc -out /home/travis/build/joindin/callingallpapers-api/deploy-key -d; ./vendor/bin/phing deploy; fi
+  -in deploy-key.enc -out /home/travis/build/joindin/callingallpapers-api/deploy-key -d && ./vendor/bin/phing deploy; fi
