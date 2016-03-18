@@ -18,20 +18,21 @@ matrix:
   - php: nightly
   - php: hhvm-nightly
 before_install:
+- if [ $TRAVIS_BRANCH == "master" ] && [ $EXECUTE_TEST_COVERALLS == 'true' ] ; then
+  - openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv
+    -in deploy-key.enc -out ~\/.ssh/deploy-key -d;
+    fi
 - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini ||
   return 0 ; fi
 - composer self-update
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer require --dev --no-update
   satooshi/php-coveralls ; fi
-- if [ $TRAVIS_BRANCH == "master" ] && [ $EXECUTE_TEST_COVERALLS == 'true' ] ; then
-   openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv
-    -in /home/travis/build/joindin/callingallpapers-api/deploy-key.enc
-    -out /home/travis/build/joindin/callingallpapers-api/deploy-key -d; fi
 
 install:
 - travis_retry composer install --no-interaction --ignore-platform-reqs
 script:
-- if [[ -e /home/travis/build/joindin/callingallpapers-api/deploy-key ]]; then echo "Deploy-key exists"; fi
+- if [[ -e /home/travis/build/joindin/callingallpapers-api/deploy-key ]]; then echo
+  "Deploy-key exists"; fi
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/phpunit -c phpunit.travis.xml
   --coverage-clover clover.xml ; fi
 - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then ./vendor/bin/phpunit -c phpunit.travis.xml;
@@ -40,4 +41,5 @@ script:
   --dry-run ; fi
 after_script:
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
-- if [ $TRAVIS_BRANCH == "master" ] && [ $EXECUTE_TEST_COVERALLS == 'true' ] ; then ./vendor/bin/phing deploy; fi
+- if [ $TRAVIS_BRANCH == "master" ] && [ $EXECUTE_TEST_COVERALLS == 'true' ] ; then
+  ./vendor/bin/phing deploy; fi
