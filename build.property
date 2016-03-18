@@ -30,5 +30,5 @@ deploy.method = sync
 deploy.path_to_rsync = /usr/bin/rsync
 ;
 ;
-deploy.identity_file = ~/.ssh/deploy-key
+deploy.identity_file = deploy-key
 
