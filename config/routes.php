@@ -2,19 +2,16 @@
 // Routes
 $app->get('/', function(
     \Psr\Http\Message\ServerRequestInterface $request,
-    \Psr\Http\Message\ResponseInterface $response,
-    array $args
+    \Psr\Http\Message\ResponseInterface $response
 ) use ($app){
     return $this->view->render($response, [], 200, 'cfp/index.twig');
 });
 $app->get('/v1/cfp', function(
     \Psr\Http\Message\ServerRequestInterface $request,
-    \Psr\Http\Message\ResponseInterface $response,
-    array $args
+    \Psr\Http\Message\ResponseInterface $response
 ) use ($app){
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo'],
-        $app->getContainer()['logger']
+        $app->getContainer()['pdo']
     );
     $list = $cpl->select();
 
@@ -41,10 +38,12 @@ $app->get('/v1/cfp/{hash}', function(
 
 $app->post('/v1/cfp', function(
     \Psr\Http\Message\ServerRequestInterface $request,
-    \Psr\Http\Message\ResponseInterface $response,
-    array $args
+    \Psr\Http\Message\ResponseInterface $response
 ) use ($app){
     $params = $request->getParsedBody();
+    if (! is_array($params)) {
+        throw new UnexpectedValueException('Expected array');
+    }
 
     $cfpFactory = new \Callingallpapers\Api\Service\CfpFactory();
     $cfp = $cfpFactory->createCfp($params);
@@ -66,6 +65,9 @@ $app->put('/v1/cfp/{hash}', function (
     array $args
 ) use ($app){
     $params = $request->getParsedBody();
+    if (! is_array($params)) {
+        throw new UnexpectedValueException('Expected array');
+    }
 
     $cfpFactory = new \Callingallpapers\Api\Service\CfpFactory();
     $cfp = $cfpFactory->createCfp($params);
@@ -83,8 +85,7 @@ $app->put('/v1/cfp/{hash}', function (
 
 $app->delete('/v1/cfp/{id}', function (
     \Psr\Http\Message\ServerRequestInterface $request,
-    \Psr\Http\Message\ResponseInterface $response,
-    array $args
+    \Psr\Http\Message\ResponseInterface $response
 ) use ($app){
     $params = $request->getParsedBody();
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(

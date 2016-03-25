@@ -39,7 +39,7 @@ interface CfpSortInterface
      * * 0 if both are equal and
      * * -1 if the first comes after the second
      *
-     * @return int;
+     * @return int
      */
     public function sort(Cfp $first, Cfp $second);
 }

@@ -40,6 +40,7 @@ class TwigRenderer
     }
     public function render(ResponseInterface $response, array $data, $status, $template)
     {
+        $response = $response->withStatus($status);
         return $this->renderer->render($response, $template, $data);
     }
 }

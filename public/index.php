@@ -29,14 +29,6 @@
  */
 require_once realpath(__DIR__ . '/../vendor/autoload.php');
 
-$app = new \Slim\App;
-$app->get('/foo', function ($req, $res, $args) {
-    return $res->withHeader(
-        'Content-Type',
-        'application/json'
-    );
-});
-
 session_start();
 
 // Instantiate the app

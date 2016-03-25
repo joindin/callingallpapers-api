@@ -41,7 +41,6 @@ class CfpPersistenceLayer
 
     public function insert(Cfp $cfp)
     {
-        $cfpExists = false;
         try {
             $this->select($cfp->getHash());
             $cfpExists = true;
@@ -131,7 +130,7 @@ class CfpPersistenceLayer
         }
 
         // No values to update, just, return
-        if (! $values) {
+        if (empty($values)) {
             return $cfp->getHash();
         }
 

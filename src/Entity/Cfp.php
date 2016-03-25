@@ -103,7 +103,7 @@ class Cfp
     /**
      * @var \DateTimeInterface Date of the last change
      */
-    protected $lastChange = null;
+    protected $lastUpdate = null;
 
     public function __construct()
     {
