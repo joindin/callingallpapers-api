@@ -56,32 +56,37 @@ class Renderer
         callable $next
     ) {
         $accept = $request->getHeader('Accept');
-        if (in_array('application/json', $accept)) {
-            $jsonHelpers = new JsonHelpers($this->app->getContainer());
-            $jsonHelpers->registerResponseView();
-            $jsonHelpers->registerErrorHandlers();
-        } elseif (in_array('text/calendar', $accept)) {
-            $container = $this->app->getContainer();
-            $container['view'] = function ($c) {
-                return new IcalendarRenderer();
-            };
-        } else {
-            $container = $this->app->getContainer();
-            $container['view'] = function ($container) {
-                $config = $container['settings'];
-                $tView = new \Slim\Views\Twig($config['renderer']['template_path'], [
-                    'cache' => $config['renderer']['cache_path'],
-                ]);
-                $tView->addExtension(new \Slim\Views\TwigExtension(
-                    $container['router'],
-                    $container['request']->getUri()
-                ));
 
-                $view = new TwigRenderer($tView);
+        switch ($accept[0]) {
+            case 'text/html':
+                $container = $this->app->getContainer();
+                $container['view'] = function ($container) {
+                    $config = $container['settings'];
+                    $tView  = new \Slim\Views\Twig($config['renderer']['template_path'],
+                        [
+                            'cache' => $config['renderer']['cache_path'],
+                        ]);
+                    $tView->addExtension(new \Slim\Views\TwigExtension(
+                        $container['router'],
+                        $container['request']->getUri()
+                    ));
 
-                return $view;
-            };
+                    $view = new TwigRenderer($tView);
+
+                    return $view;
+                };
+                break;
+            case 'text/calendar':
+                $container = $this->app->getContainer();
+                $container['view'] = new IcalendarRenderer();
+                break;
+            case 'application/json':
+            default:
+                $jsonHelpers = new JsonHelpers($this->app->getContainer());
+                $jsonHelpers->registerResponseView();
+                $jsonHelpers->registerErrorHandlers();
         }
+
         return $next($request, $response);
     }
 }

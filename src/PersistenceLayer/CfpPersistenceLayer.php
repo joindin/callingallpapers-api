@@ -41,7 +41,6 @@ class CfpPersistenceLayer
 
     public function insert(Cfp $cfp)
     {
-        $cfpExists = false;
         try {
             $this->select($cfp->getHash());
             $cfpExists = true;
@@ -83,7 +82,7 @@ class CfpPersistenceLayer
             return $values['hash'];
         }
 
-        throw new \UnexpectedValueException('The CfP could not be stored', 400);
+        throw new \UnexpectedValueException('The CfP could not be stored' . $statement->er, 400);
     }
 
     public function update(Cfp $cfp, $fetchHash)
@@ -131,7 +130,7 @@ class CfpPersistenceLayer
         }
 
         // No values to update, just, return
-        if (! $values) {
+        if (empty($values)) {
             return $cfp->getHash();
         }
 

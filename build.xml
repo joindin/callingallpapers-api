@@ -43,7 +43,7 @@
         <echo message="Updating composer-binary"/>
         <exec command="composer self-update"/>
         <echo message="Updating Requirements"/>
-        <exec command="composer update" />
+        <exec command="composer update --no-dev" />
     </target>
 
     <target name="test">

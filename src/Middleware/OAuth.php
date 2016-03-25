@@ -63,19 +63,13 @@ class OAuth
             // Rate-Limit is handlede by another Middleware
             return $next($request, $response);
         }
-        if (! $auth) {
-            $response = $response->withHeader('WWW-Authenticate', 'Bearer realm="callingallpapers", error="no token", error_desciption="No Access-Token provided"');
-            $response = $response->withStatus(401);
-
-            return $response;
+        if (empty($auth)) {
+            return $this->getNoAuthResponse($response);
         }
 
         $bearer = explode(' ', $auth[0]);
         if (! isset($bearer[1])) {
-            $response = $response->withHeader('WWW-Authenticate', 'Bearer realm="callingallpapers", error="no token", error_desciption="No Access-Token provided"');
-            $response = $response->withStatus(401);
-
-            return $response;
+            return $this->getNoAuthResponse($response);
         }
         $bearer = $bearer[1];
 
@@ -83,14 +77,20 @@ class OAuth
         try {
             $user = $upl->getUserForToken($bearer);
         } catch (\Exception $e) {
-            $response = $response->withHeader('WWW-Authenticate', 'Bearer realm="callingallpapers", error="invalid token", error_desciption="Invalid Access-Token provided"');
-            $response = $response->withStatus(401);
-
-            return $response;
+            return $this->getNoAuthResponse($response, 'invalid token', 'Invalid Access-Token provided');
         }
 
         $request = $request->withAttribute('user', $user['user']);
 
         return $next($request, $response);
+    }
+
+    protected function getNoAuthResponse($response, $error = 'no token', $description = 'No Access-Token provided')
+    {
+        $response = $response->withHeader('WWW-Authenticate', 'Bearer realm="callingallpapers", error="' . $error . '", error_desciption="' . $description . '"');
+        $response = $response->withStatus(401);
+
+        return $response;
+
     }
 }

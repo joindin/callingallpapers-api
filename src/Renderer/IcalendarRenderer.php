@@ -71,6 +71,7 @@ class IcalendarRenderer
         }
 
         $response = $response->withHeader('Content-Type', 'text/calendar');
+        $response = $response->withStatus($status);
 
         $stream = $response->getBody();
         $stream->write($icalendar->serialize());
