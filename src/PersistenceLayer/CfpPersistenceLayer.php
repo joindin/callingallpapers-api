@@ -82,7 +82,7 @@ class CfpPersistenceLayer
             return $values['hash'];
         }
 
-        throw new \UnexpectedValueException('The CfP could not be stored' . $statement->er, 400);
+        throw new \UnexpectedValueException('The CfP could not be stored', 400);
     }
 
     public function update(Cfp $cfp, $fetchHash)
