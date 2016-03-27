@@ -101,9 +101,8 @@
     </target>
 
     <target name="callPreDeployScriptOnServer" >
-        <available property="deploy.pre_deploy_script_exists" file="${deploy.local_folder}/${deploy.pre_deploy_script}"/>
         <if>
-            <isset property="deploy.pre_deploy_script_exists"/>
+            <available file="${deploy.local_folder}/${deploy.pre_deploy_script}"/>
             <then>
                 <echo>Calling pre-deploy-script on target ${deploy.target}</echo>
                 <loadfile property="deploy.pre_deploy_script_content" file="${deploy.local_folder}/${deploy.pre_deploy_script}"/>
