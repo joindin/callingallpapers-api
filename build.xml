@@ -112,6 +112,8 @@
     </target>
 
     <target name="deployFolderToServer">
+        <phingcall inheritAll="true" target="syncDeployFolderToServer"/>
+        <!--
         <if>
             <equals arg1="sync" arg2="${deploy.method}"/>
             <then>
@@ -124,6 +126,7 @@
                 </then>
             </elseif>
         </if>
+        -->
     </target>
 
     <target name="removeDeployFolder">
