@@ -91,6 +91,5 @@ class OAuth
         $response = $response->withStatus(401);
 
         return $response;
-
     }
 }
