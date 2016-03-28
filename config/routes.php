@@ -13,7 +13,7 @@ $app->get('/v1/cfp', function(
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
         $app->getContainer()['pdo']
     );
-    $list = $cpl->select();
+    $list = $cpl->getCurrent();
 
     $cfpMapper = new \Callingallpapers\Api\Entity\CfpListMapper();
 

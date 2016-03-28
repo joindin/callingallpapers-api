@@ -202,4 +202,41 @@ class CfpPersistenceLayer
 
         return $statement->execute(['hash' => $hash]);
     }
+
+    public function getCurrent()
+    {
+        $statement = 'SELECT * FROM `cfp` WHERE dateCfpEnd > :now AND dateCfpStart < :now';
+
+        $statement = $this->pdo->prepare($statement);
+
+        $list = new \Callingallpapers\Api\Entity\CfpList();
+        $statement->execute(['now' => (new \DateTime())->format('c')]);
+        $content = $statement->fetchAll();
+        if (count($content) < 1) {
+            throw new \UnexpectedValueException('No CFPs found', 404);
+        }
+
+        foreach ($content as $item) {
+            $cfp = new \Callingallpapers\Api\Entity\Cfp();
+            $cfp->setName($item['name']);
+            $cfp->setDateCfpEnd(new \DateTimeImmutable($item['dateCfpEnd']));
+            $cfp->setDateCfpStart(new \DateTimeImmutable($item['dateCfpStart']));
+            $cfp->setUri($item['uri']);
+            $cfp->setTimezone(new \DateTimeZone($item['timezone']));
+            $cfp->setDateEventStart(new \DateTimeImmutable($item['dateEventStart']));
+            $cfp->setDateEventEnd(new \DateTimeImmutable($item['dateEventEnd']));
+            $cfp->setDescription($item['description']);
+            $cfp->setEventUri($item['eventUri']);
+            $cfp->setIconUri($item['iconUri']);
+            $cfp->setLatitude($item['latitude']);
+            $cfp->setLongitude($item['longitude']);
+            $cfp->setLocation($item['location']);
+            $cfp->setTags(explode(',', $item['tags']));
+            $cfp->setLastUpdated(new \DateTimeImmutable($item['lastUpdate']));
+
+            $list->add($cfp);
+        }
+
+        return $list;
+    }
 }
