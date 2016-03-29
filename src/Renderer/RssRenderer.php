@@ -30,9 +30,9 @@
 namespace Callingallpapers\Api\Renderer;
 
 use Psr\Http\Message\ResponseInterface;
-use Sabre\VObject\Component\VCalendar;
+use Zend\Feed\Writer\Feed;
 
-class IcalendarRenderer
+class RssRenderer
 {
     /**
      *
@@ -44,39 +44,46 @@ class IcalendarRenderer
      */
     public function render(ResponseInterface $response, array $data = [], $status = 200)
     {
-        $icalendar = new VCalendar();
+        $feed = new Feed();
+        $feed->setTitle('Calling all Papers');
+        $feed->setDescription('Calls for Papers that are currently open');
+        $feed->setLink('http://callingallpapers.com');
+        $feed->setFeedLink('http://api.callingallpapers.com/v1/cfp', 'rss');
+        $feed->setFeedLink('http://api.callingallpapers.com/v1/cfp', 'atom');
+        $feed->addAuthor([
+            'name' => 'Andreas Heigl',
+            'email' => 'andreas@heigl.org',
+            'uri'   => 'http://andreas.heigl.org',
+        ]);
+        $feed->setDateModified(time());
         if (! isset($data['cfps'])) {
             $data['cfps'] = [];
         }
         foreach ($data['cfps'] as $cfp) {
-            $cfpStart = new \DateTime($cfp['dateCfpStart']);
-            $cfpEnd   = new \DateTime($cfp['dateCfpEnd']);
             $lastChange = new \DateTime($cfp['lastChange']);
             $lastChange->setTimezone(new \DateTimeZone('UTC'));
-            if ($cfp['timezone']) {
-                $cfpStart->setTimezone(new \DateTimeZone($cfp['timezone']));
-                $cfpEnd->setTimezone(new \DateTimeZone($cfp['timezone']));
-            }
 
-            $icalendar->add('VEVENT', [
-                'SUMMARY' => $cfp['name'],
-                'DTSTART' => $cfpStart,
-                'DTEND'   => $cfpEnd,
-                'URL'     => $cfp['uri'],
-                'DTSTAMP' => $lastChange,
-                'UID'     => $cfp['_rel']['cfp_uri'],
-                'DESCRIPTION' => $cfp['description'],
-                'GEO'     => round($cfp['latitude'], 6) . ';' . round($cfp['longitude'], 6),
-                'LOCATION' => $cfp['location'],
+            $entry = $feed->createEntry();
+            $entry->setTitle($cfp['name']);
+            $entry->setLink($cfp['uri']);
+            $entry->setDateModified(new \DateTime($cfp['dateCfpEnd']));
+            $entry->setDateCreated(new \DateTime($cfp['dateCfpEnd']));
+            $entry->setDescription(sprintf(
+                'CfP for %3$s runs from %1$s to %2$s',
+                (new \DateTime($cfp['dateCfpStart']))->format('c'),
+                (new \DateTime($cfp['dateCfpEnd']))->format('c'),
+                $cfp['name']
+            ));
+            $entry->setContent($cfp['description']);
 
-            ]);
+            $feed->addEntry($entry);
         }
 
-        $response = $response->withHeader('Content-Type', 'text/calendar');
+        $response = $response->withHeader('Content-Type', 'application/rss+xml');
         $response = $response->withStatus($status);
 
         $stream = $response->getBody();
-        $stream->write($icalendar->serialize());
+        $stream->write($feed->export('rss'));
 
         return $response->withBody($stream);
     }

@@ -4,7 +4,8 @@
         "aporat/slim-json-helpers": "^1.0",
         "sabre/vobject": "^4.0",
         "slim/twig-view": "^2.0",
-        "monolog/monolog": "^1.17"
+        "monolog/monolog": "^1.17",
+        "zendframework/zend-feed": "^2.7"
     },
     "autoload" : {
         "psr-4": {

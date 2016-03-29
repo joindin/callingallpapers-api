@@ -28,6 +28,7 @@
 namespace Callingallpapers\Api\Middleware;
 
 use Callingallpapers\Api\Renderer\IcalendarRenderer;
+use Callingallpapers\Api\Renderer\RssRenderer;
 use Callingallpapers\Api\Renderer\TwigRenderer;
 use JsonHelpers\JsonHelpers;
 use Psr\Http\Message\ResponseInterface;
@@ -57,7 +58,13 @@ class Renderer
     ) {
         $accept = $request->getHeader('Accept');
 
-        if (strpos($accept[0], 'text/html') !== false) {
+        if (strpos($accept[0], 'text/calendar') !== false) {
+            $container         = $this->app->getContainer();
+            $container['view'] = new IcalendarRenderer();
+        } elseif (strpos($accept[0], 'application/rss+xml') !== false) {
+            $container         = $this->app->getContainer();
+            $container['view'] = new RssRenderer();
+        } elseif (strpos($accept[0], 'text/html') !== false) {
             $container         = $this->app->getContainer();
             $container['view'] = function ($container) {
                 $config = $container['settings'];
@@ -74,9 +81,6 @@ class Renderer
 
                 return $view;
             };
-        } elseif (strpos($accept[0], 'text/calendar') !== false) {
-            $container         = $this->app->getContainer();
-            $container['view'] = new IcalendarRenderer();
         } else {
             $jsonHelpers = new JsonHelpers($this->app->getContainer());
             $jsonHelpers->registerResponseView();
