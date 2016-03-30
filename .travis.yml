@@ -22,13 +22,13 @@ before_install:
   return 0 ; fi
 - composer self-update
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer require --dev --no-update
-  satooshi/php-coveralls ; fi
+  satooshi/php-coveralls; composer update satooshi/php-coveralls; fi
 
 install:
 - travis_retry composer install --no-interaction --ignore-platform-reqs
 script:
 - if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/phpunit -c phpunit.travis.xml
-  --coverage-clover clover.xml ; fi
+  --coverage-clover build/logs/clover.xml ; fi
 - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then ./vendor/bin/phpunit -c phpunit.travis.xml;
   fi
 - if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff
