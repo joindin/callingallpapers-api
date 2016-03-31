@@ -110,6 +110,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
+            <li><a href='mailto:apikeyrequest@callingallpapers.com>Request an API-Token</a></li>
             <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -125,8 +126,6 @@ on currently open CfPs.</p>
 <p>We currently have examples for language bindings in PHP but you can consume this API
 with any language you like. You can view code examples in the dark area to the right,
 and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This API documentation was created with <a href="https://github.com/tripit/slate">Slate</a>.</p>
 
 <h1 id="authentication">Authentication</h1>
 
@@ -204,6 +203,34 @@ $result = $client-&gt;request('GET', 'https://example.com/v1/cfp');
 <h3 id="http-request">HTTP Request</h3>
 
 <p><code class="prettyprint">GET http://example.com/v1/cfp</code></p>
+
+<h3 id="content-types">Content-Types</h3>
+
+<p>This endpoint can return differntly prepared data for different Content-Types.</p>
+
+<table><thead>
+<tr>
+<th>MIME-Type</th>
+<th>Content</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>application/json (default)</td>
+<td>JSON-Data as described</td>
+</tr>
+<tr>
+<td>application/rss+xml</td>
+<td>RSS-Feed for the currently open CfPs</td>
+</tr>
+<tr>
+<td>text/calendar</td>
+<td>iCalendar-File for subscription in your calendaring-application</td>
+</tr>
+<tr>
+<td>text/html</td>
+<td>HTML-Representation</td>
+</tr>
+</tbody></table>
 
 <h3 id="query-parameters">Query Parameters</h3>
 
