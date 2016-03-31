@@ -1,2 +1,3 @@
 # callingallpapers-api
-The API that will power a future version of callingallpapers.com
+
+This is the documentation for api.callingallpapers.com
