@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "b2f1e9d5f36dd6c765029c86941dc0bb",
-    "content-hash": "9617819b5f414704e3cfb55652214faf",
+    "hash": "d3cf491d3585f76e01764dc85b7a071d",
+    "content-hash": "79b81aac568676b5762eaa9835a5a50d",
     "packages": [
         {
             "name": "aporat/slim-json-helpers",
@@ -200,6 +200,53 @@
                 "routing"
             ],
             "time": "2015-06-18 19:15:47"
+        },
+        {
+            "name": "org_heigl/clacks-middleware",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heiglandreas/X-Clacks-Overhead.git",
+                "reference": "27fb68eddf94fec324846a94b7a21f18f628b2e3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heiglandreas/X-Clacks-Overhead/zipball/27fb68eddf94fec324846a94b7a21f18f628b2e3",
+                "reference": "27fb68eddf94fec324846a94b7a21f18f628b2e3",
+                "shasum": ""
+            },
+            "require": {
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "guzzlehttp/psr7": "^1.2",
+                "phpunit/phpunit": "^5.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Org_Heigl\\Middleware\\Clacks\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Heigl",
+                    "email": "andreas@heigl.org",
+                    "role": "maintainer"
+                }
+            ],
+            "description": "Implements the Clacks-Header as per http://www.gnuterrypratchett.com",
+            "keywords": [
+                "Pratchett",
+                "clacker",
+                "clacks",
+                "discworld"
+            ],
+            "time": "2016-04-05 19:22:30"
         },
         {
             "name": "pimple/pimple",
