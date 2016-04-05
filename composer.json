@@ -1,4 +1,7 @@
 {
+    "name" : "joindin/callingallpapers-api",
+    "description" : "The API powering callingallpapers.com",
+    "license": "MIT",
     "require": {
         "slim/slim": "^3.0",
         "aporat/slim-json-helpers": "^1.0",
