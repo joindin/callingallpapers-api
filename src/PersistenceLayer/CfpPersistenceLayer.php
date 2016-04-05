@@ -116,10 +116,17 @@ class CfpPersistenceLayer
             'longitude',
             'location',
             'tags',
+            'source',
         ];
 
         foreach ($options as $option) {
             $method = 'get' . $option;
+            // Merge values from tags and source before comparing!
+            if (in_array($option, ['tags', 'source'])) {
+                $setter = 'set' . $option;
+                $cfp->$setter(array_merge($oldValues->$method(), $cfp->$method()));
+
+            }
             if ($cfp->$method() != $oldValues->$method()) {
                 $statementElements[] = '`' . $option . '` = :' . $option;
                 $values[$option]     = $cfp->$method();
@@ -190,6 +197,7 @@ class CfpPersistenceLayer
             $cfp->setLocation($item['location']);
             $cfp->setTags(explode(',', $item['tags']));
             $cfp->setLastUpdated(new \DateTimeImmutable($item['lastUpdate']));
+            $cfp->setSource(explode(',', $item['source']));
 
             $list->add($cfp);
         }
@@ -236,6 +244,7 @@ class CfpPersistenceLayer
             $cfp->setLocation($item['location']);
             $cfp->setTags(explode(',', $item['tags']));
             $cfp->setLastUpdated(new \DateTimeImmutable($item['lastUpdate']));
+            $cfp->setSource(explode(',', $item['source']));
 
             $list->add($cfp);
         }
