@@ -3,7 +3,7 @@
 $app->get('/', function(
     \Psr\Http\Message\ServerRequestInterface $request,
     \Psr\Http\Message\ResponseInterface $response
-) use ($app){
+) {
     return $this->view->render($response, [], 200, 'cfp/index.twig');
 });
 $app->get('/v1/cfp', function(
