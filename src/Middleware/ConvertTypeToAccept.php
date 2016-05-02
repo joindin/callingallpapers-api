@@ -25,7 +25,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT-License
  * @version   0.0
  * @since     16.01.2016
- * @link      https://github.com/joindin/callingallpapers
+ * @link      https://github.com/joindin/callingallpapers-api
  */
 
 namespace Callingallpapers\Api\Middleware;
