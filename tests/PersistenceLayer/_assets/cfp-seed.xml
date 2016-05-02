@@ -18,6 +18,7 @@
         <column>location</column>
         <column>tags</column>
         <column>lastUpdate</column>
+        <column>source</column>
         <row>
             <value>1</value>
             <value>ff</value>
@@ -36,6 +37,7 @@
             <value>irgendwo im Taunus</value>
             <value>cfp,test,tag</value>
             <value>2016-06-01 12:00:00+02:00</value>
+            <value>joind.in</value>
         </row>
         <row>
             <value>2</value>
@@ -55,6 +57,7 @@
             <value>somewhere in northamerica</value>
             <value>cfp,test,tag</value>
             <value>2016-06-01 12:00:00+02:00</value>
+            <value>joind.in</value>
         </row>
     </table>
 </dataset>

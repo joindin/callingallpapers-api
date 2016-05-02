@@ -75,6 +75,7 @@ class CfpFactory
         self::setLocation($cfp, $params);
         self::setGeolocation($cfp, $params);
         self::setTags($cfp, $params);
+        self::setSource($cfp, $params);
 
         return $cfp;
     }
@@ -220,5 +221,14 @@ class CfpFactory
         $cfp->setTags(array_map(function ($item) {
             return filter_var($item, FILTER_SANITIZE_STRING);
         }, $array['tags']));
+    }
+
+    public static function setSource(Cfp $cfp, array $array)
+    {
+        if (! isset($array['source'])) {
+            return;
+        }
+
+        $cfp->addSource(filter_var($array['source'], FILTER_SANITIZE_STRING));
     }
 }

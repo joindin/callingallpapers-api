@@ -105,6 +105,11 @@ class Cfp
      */
     protected $lastUpdate = null;
 
+    /**
+     * @var array The sources of a CfP
+     */
+    protected $source = [];
+
     public function __construct()
     {
         $this->dateCfpStart   = new \DateTimeImmutable();
@@ -276,5 +281,22 @@ class Cfp
     public function setLastUpdated(\DateTimeinterface $date)
     {
         $this->lastUpdate = $date;
+    }
+
+    public function setSource(array $source)
+    {
+        $this->source = $source;
+    }
+
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    public function addSource($source)
+    {
+        if (! in_array($source)) {
+            $this->source[] = $source;
+        }
     }
 }

@@ -63,7 +63,8 @@ class CfpPersistenceLayerTest extends \PHPUnit_Extensions_Database_TestCase
     longitude REAL,
     location TEXT,
     tags TEXT,
-    lastUpdate TEXT
+    lastUpdate TEXT,
+    source TEXT
 );
 CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 ');
@@ -175,6 +176,44 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 
         $results = $cpl->select(sha1('http://example.com'));
         $this->assertEquals(1, $results->count());
+    }
+
+    public function testThatUpdatingAnEntryWhereMergeOfTagsIsNecessaryWorks()
+    {
+        $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
+            "Pre-Condition");
+        $cpl = new CfpPersistenceLayer($this->pdo);
+
+        $cfp = new Cfp;
+        $cfp->setEventUri('http://example.com');
+        $cfp->setTags(['foo', 'bar']);
+        $newHash = $cpl->update($cfp, 'ff');
+
+        $queryTable = $this->getConnection()->createQueryTable(
+            'cfp', 'SELECT tags FROM cfp WHERE hash="' . $newHash . '";'
+        );
+        $expectedTable = $this->createFlatXmlDataSet(__DIR__ . "/_assets/expectedTags.xml")
+                              ->getTable("cfp");
+        $this->assertTablesEqual($expectedTable, $queryTable);
+    }
+
+    public function testThatUpdatingAnEntryWhereMergeOfSourcesIsNecessaryWorks()
+    {
+        $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
+            "Pre-Condition");
+        $cpl = new CfpPersistenceLayer($this->pdo);
+
+        $cfp = new Cfp;
+        $cfp->setEventUri('http://example.com');
+        $cfp->setSource(['lanyrd.com']);
+        $newHash = $cpl->update($cfp, 'ff');
+
+        $queryTable = $this->getConnection()->createQueryTable(
+            'cfp', 'SELECT source FROM cfp WHERE hash="' . $newHash . '";'
+        );
+        $expectedTable = $this->createFlatXmlDataSet(__DIR__ . "/_assets/expectedSources_1.xml")
+                              ->getTable("cfp");
+        $this->assertTablesEqual($expectedTable, $queryTable);
     }
 
     /**
