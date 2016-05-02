@@ -60,23 +60,26 @@ class RssRenderer
             $data['cfps'] = [];
         }
         foreach ($data['cfps'] as $cfp) {
-            $lastChange = new \DateTime($cfp['lastChange']);
-            $lastChange->setTimezone(new \DateTimeZone('UTC'));
+            try {
+                $lastChange = new \DateTime($cfp['lastChange']);
+                $lastChange->setTimezone(new \DateTimeZone('UTC'));
 
-            $entry = $feed->createEntry();
-            $entry->setTitle($cfp['name']);
-            $entry->setLink($cfp['uri']);
-            $entry->setDateModified(new \DateTime($cfp['dateCfpEnd']));
-            $entry->setDateCreated(new \DateTime($cfp['dateCfpEnd']));
-            $entry->setDescription(sprintf(
-                'CfP for %3$s runs from %1$s to %2$s',
-                (new \DateTime($cfp['dateCfpStart']))->format('c'),
-                (new \DateTime($cfp['dateCfpEnd']))->format('c'),
-                $cfp['name']
-            ));
-            $entry->setContent($cfp['description']);
+                $entry = $feed->createEntry();
+                $entry->setTitle($cfp['name']);
+                $entry->setLink($cfp['uri']);
+                $entry->setDateModified(new \DateTime($cfp['dateCfpEnd']));
+                $entry->setDateCreated(new \DateTime($cfp['dateCfpEnd']));
+                $entry->setDescription(sprintf(
+                    'CfP for %3$s runs from %1$s to %2$s',
+                    (new \DateTime($cfp['dateCfpStart']))->format('c'),
+                    (new \DateTime($cfp['dateCfpEnd']))->format('c'),
+                    $cfp['name']
+                ));
+                $entry->setContent($cfp['description']);
 
-            $feed->addEntry($entry);
+                $feed->addEntry($entry);
+            } catch (\Exception $e) {
+            }
         }
 
         $response = $response->withHeader('Content-Type', 'application/rss+xml');
