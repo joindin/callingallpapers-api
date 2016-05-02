@@ -192,10 +192,9 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $queryTable = $this->getConnection()->createQueryTable(
             'cfp', 'SELECT tags FROM cfp WHERE hash="' . $newHash . '";'
         );
-        $expectedTable = $this->createFlatXmlDataSet( __DIR__ . "/_assets/expectedTags.xml")
+        $expectedTable = $this->createFlatXmlDataSet(__DIR__ . "/_assets/expectedTags.xml")
                               ->getTable("cfp");
         $this->assertTablesEqual($expectedTable, $queryTable);
-
     }
 
     public function testThatUpdatingAnEntryWhereMergeOfSourcesIsNecessaryWorks()
@@ -212,10 +211,9 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $queryTable = $this->getConnection()->createQueryTable(
             'cfp', 'SELECT source FROM cfp WHERE hash="' . $newHash . '";'
         );
-        $expectedTable = $this->createFlatXmlDataSet( __DIR__ . "/_assets/expectedSources_1.xml")
+        $expectedTable = $this->createFlatXmlDataSet(__DIR__ . "/_assets/expectedSources_1.xml")
                               ->getTable("cfp");
         $this->assertTablesEqual($expectedTable, $queryTable);
-
     }
 
     /**

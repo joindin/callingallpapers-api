@@ -80,7 +80,6 @@ class CfpPersistenceLayer
             'lastUpdate'     => (new \DateTime('now', new \DateTimezone('UTC')))->format('c'),
         ];
 
-
         if ($statement->execute($values)) {
             return $values['hash'];
         }
@@ -125,7 +124,6 @@ class CfpPersistenceLayer
             if (in_array($option, ['tags', 'source'])) {
                 $setter = 'set' . $option;
                 $cfp->$setter(array_merge($oldValues->$method(), $cfp->$method()));
-
             }
             if ($cfp->$method() != $oldValues->$method()) {
                 $statementElements[] = '`' . $option . '` = :' . $option;
@@ -168,8 +166,6 @@ class CfpPersistenceLayer
             $statement .= ' WHERE `hash`= :hash';
             $values['hash'] = $hash;
         }
-
-
 
         $statement = $this->pdo->prepare($statement);
 
