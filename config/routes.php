@@ -95,3 +95,20 @@ $app->delete('/v1/cfp/{id}', function (
 
     return $response->withHeader('Content-Length', '0')->withStatus(204);
 });
+
+$app->get('/v1/search', function (
+    \Psr\Http\Message\ServerRequestInterface $request,
+    \Psr\Http\Message\ResponseInterface $response,
+    array $args
+) use ($app) {
+
+    $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
+        $app->getContainer()['pdo']
+    );
+
+    $list = $cpl->search($request->getQueryParams());
+
+    $cfpMapper = new \Callingallpapers\Api\Entity\CfpListMapper();
+
+    return $this->view->render($response, $cfpMapper->map($list), 200, 'cfp/list.twig');;
+});
