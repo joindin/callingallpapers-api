@@ -11,7 +11,8 @@ $app->get('/v1/cfp', function(
     \Psr\Http\Message\ResponseInterface $response
 ) use ($app){
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo']
+        $app->getContainer()['pdo'],
+        $app->getContainer()['timezoneHelper']
     );
     $list = $cpl->getCurrent();
 
@@ -27,7 +28,8 @@ $app->get('/v1/cfp/{hash}', function(
 ) use ($app){
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo']
+        $app->getContainer()['pdo'],
+        $app->getContainer()['timezoneHelper']
     );
     $list = $cpl->select($args['hash']);
 
@@ -49,7 +51,8 @@ $app->post('/v1/cfp', function(
     $cfp = $cfpFactory->createCfp($params);
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo']
+        $app->getContainer()['pdo'],
+        $app->getContainer()['timezoneHelper']
     );
     $cpl->insert($cfp);
 
@@ -73,7 +76,8 @@ $app->put('/v1/cfp/{hash}', function (
     $cfp = $cfpFactory->createCfp($params);
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo']
+        $app->getContainer()['pdo'],
+        $app->getContainer()['timezoneHelper']
     );
     $cpl->update($cfp, $args['hash']);
 
@@ -89,7 +93,8 @@ $app->delete('/v1/cfp/{id}', function (
 ) use ($app){
     $params = $request->getParsedBody();
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo']
+        $app->getContainer()['pdo'],
+        $app->getContainer()['timezoneHelper']
     );
     $cpl->delete($params['hash']);
 
@@ -103,7 +108,8 @@ $app->get('/v1/search', function (
 ) use ($app) {
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
-        $app->getContainer()['pdo']
+        $app->getContainer()['pdo'],
+        $app->getContainer()['timezoneHelper']
     );
 
     $list = $cpl->search($request->getQueryParams());

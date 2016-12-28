@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e0a89969c7d470ff2fd7479ce17dd5c1",
-    "content-hash": "fd9721c685724016898f2b443abd6097",
+    "hash": "484d3a053997029986008a7c91f58c1d",
+    "content-hash": "cc010e0d3c7331c24e4e21d96dcc2d0b",
     "packages": [
         {
             "name": "aporat/slim-json-helpers",
@@ -290,6 +290,44 @@
                 "discworld"
             ],
             "time": "2016-04-05 19:22:30"
+        },
+        {
+            "name": "org_heigl/pdo_timezone_helper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/heiglandreas/PdoTimezoneHelper.git",
+                "reference": "af66dbd4c337df985b9f32ccc2899f8018d99072"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/heiglandreas/PdoTimezoneHelper/zipball/af66dbd4c337df985b9f32ccc2899f8018d99072",
+                "reference": "af66dbd4c337df985b9f32ccc2899f8018d99072",
+                "shasum": ""
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^1.12",
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "lib",
+            "autoload": {
+                "psr-4": {
+                    "Org_Heigl\\PdoTimezoneHelper\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andreas Heigl",
+                    "email": "andreas@heigl.org"
+                }
+            ],
+            "description": "Helper for timezone-handling in databases",
+            "time": "2016-09-23 19:13:13"
         },
         {
             "name": "pimple/pimple",
@@ -2635,7 +2673,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "org_heigl/pdo_timezone_helper": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

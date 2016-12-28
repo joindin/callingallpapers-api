@@ -37,14 +37,18 @@ use Camel\Format\CamelCase;
 use Camel\Format\SnakeCase;
 use DateTime;
 use Monolog\Logger;
+use Org_Heigl\PdoTimezoneHelper\Handler\PdoTimezoneHandlerInterface;
 
 class CfpPersistenceLayer
 {
     protected $pdo;
 
-    public function __construct(\PDO $pdo)
+    private $timezoneHelper;
+
+    public function __construct(\PDO $pdo, PdoTimezoneHandlerInterface $timezoneHelper)
     {
         $this->pdo = $pdo;
+        $this->timezoneHelper = $timezoneHelper;
     }
 
     public function insert(Cfp $cfp)
@@ -311,8 +315,7 @@ class CfpPersistenceLayer
                     if (array_key_exists($key . '_compare', $parameters) && isset($parameters[$key . '_compare'][$itemkey]) && in_array($parameters[$key . '_compare'][$itemkey], ['=', '<', '>', '<>'])) {
                         $compare = $parameters[$key . '_compare'][$itemkey];
                     }
-                    $where[] = 'datetime(`' . $transformer->transform($key) . '`) ' . $compare . ' datetime(:' . $key . '_' . $itemkey . ')';
-//                    $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' CONVERT_TZ(:' . $key . ', timezone, \'UTC\')';
+                    $where[] = $this->timezoneHelper->getUtcDateTime($transformer->transform($key)) . ' ' . $compare . ' :' . $key . '_' . $itemkey;
                     $value = (new DateTime($item))->setTimezone(new \DateTimeZone('UTC'))->format('c');
                 } else {
                     $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' :' . $key;
@@ -324,12 +327,11 @@ class CfpPersistenceLayer
             throw new \UnexpectedValueException('No CFPs found', 404);
         }
 
-        $statement .= implode(' AND ', $where);
+        $statement .= implode(' AND ', $where) . ' ORDER BY dateCfpEnd ASC';
 
         $statement = $this->pdo->prepare($statement);
 
         $statement->execute($values);
-        error_log($statement->queryString);
         $content = $statement->fetchAll();
         if (count($content) < 1) {
             throw new \UnexpectedValueException('No CFPs found', 404);
