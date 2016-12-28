@@ -24,3 +24,7 @@ $container['pdo'] = function($c) {
 
     return $db;
 };
+
+$container['timezoneHelper'] = function($c) {
+    return \Org_Heigl\PdoTimezoneHelper\PdoTimezoneHelper::create($c->get('pdo'));
+};
