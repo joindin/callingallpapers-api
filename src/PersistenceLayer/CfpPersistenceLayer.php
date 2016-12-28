@@ -293,7 +293,6 @@ class CfpPersistenceLayer
         $statement = 'SELECT * FROM `cfp` WHERE ';
         $values    = [];
         $where = [];
-        error_log(print_r($parameters, true));
         foreach ($parameters as $key => $value) {
             if (! in_array($key, $fields)) {
                 continue;
@@ -309,11 +308,11 @@ class CfpPersistenceLayer
                     'date_event_end',
                     'date_event_start'
                 ])) {
-                    if (array_key_exists($key . '_compare', $parameters) && isset($parameters[$key . '_compare'][$itemkey])) {
+                    if (array_key_exists($key . '_compare', $parameters) && isset($parameters[$key . '_compare'][$itemkey]) && in_array($parameters[$key . '_compare'][$itemkey], ['=', '<', '>', '<>'])) {
                         $compare = $parameters[$key . '_compare'][$itemkey];
                     }
                     $where[] = 'datetime(`' . $transformer->transform($key) . '`) ' . $compare . ' datetime(:' . $key . '_' . $itemkey . ')';
-//                $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' CONVERT_TZ(:' . $key . ', timezone, \'UTC\')';
+//                    $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' CONVERT_TZ(:' . $key . ', timezone, \'UTC\')';
                     $value = (new DateTime($item))->setTimezone(new \DateTimeZone('UTC'))->format('c');
                 } else {
                     $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' :' . $key;
