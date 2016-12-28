@@ -26,5 +26,8 @@ $container['pdo'] = function($c) {
 };
 
 $container['timezoneHelper'] = function($c) {
-    return \Org_Heigl\PdoTimezoneHelper\PdoTimezoneHelper::create($c->get('pdo'));
+    $tzh = \Org_Heigl\PdoTimezoneHelper\PdoTimezoneHelper::create($c->get('pdo'));
+    $tzh->setTimezoneField($c->get('settings')['db']['timezonefield']);
+
+    return $tzh;
 };
