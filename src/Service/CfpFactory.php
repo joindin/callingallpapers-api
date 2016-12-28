@@ -45,7 +45,7 @@ class CfpFactory
      */
     public function createCfp(array $params)
     {
-        $requiredFields = ['name', 'dateCfpStart', 'dateCfpEnd', 'uri', 'eventUri', 'timezone'];
+        $requiredFields = ['name', 'dateCfpEnd', 'uri', 'eventUri', 'timezone'];
         $missingFields = [];
 
         foreach ($requiredFields as $field) {
@@ -91,7 +91,7 @@ class CfpFactory
     public static function setDateCfpStart(Cfp $cfp, array $array)
     {
         if (! isset($array['dateCfpStart'])) {
-            throw new \InvalidArgumentException('CFP-StartDate has to be specified');
+            $array['dateCfpStart'] = '@0';
         }
         $cfp->setDateCfpStart(new DateTimeImmutable($array['dateCfpStart']));
     }

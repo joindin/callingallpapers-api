@@ -32,6 +32,11 @@
 namespace Callingallpapers\Api\PersistenceLayer;
 
 use Callingallpapers\Api\Entity\Cfp;
+use Camel\CaseTransformer;
+use Camel\Format\CamelCase;
+use Camel\Format\SnakeCase;
+use DateTime;
+use Monolog\Logger;
 
 class CfpPersistenceLayer
 {
@@ -56,6 +61,10 @@ class CfpPersistenceLayer
                 'There is already a CFP with URL "%1$s".',
                 $cfp->getEventUri()
             ), 400);
+        }
+
+        if ($cfp->getDateCfpStart()->getTimestamp() < 10000) {
+            $cfp->setDateCfpStart(new \DateTimeImmutable());
         }
         $statement = 'INSERT into `cfp`(`dateCfpStart`, `dateCfpEnd`, `dateEventStart`, `dateEventEnd`, `name`, `uri`, `hash`, `timezone`, `description`, `eventUri`, `iconUri`, `latitude`, `longitude`, `location`, `tags`, `lastUpdate`) ' .
                      'VALUES (:dateCfpStart, :dateCfpEnd, :dateEventStart, :dateEventEnd, :name, :uri, :hash, :timezone, :description, :eventUri, :iconUri, :latitude, :longitude, :location, :tags, :lastUpdate);';
@@ -120,19 +129,25 @@ class CfpPersistenceLayer
 
         foreach ($options as $option) {
             $method = 'get' . $option;
-            // Merge values from tags and source before comparing!
+           // Merge values from tags and source before comparing!
             if (in_array($option, ['tags', 'source'])) {
                 $setter = 'set' . $option;
                 $cfp->$setter(array_merge($oldValues->$method(), $cfp->$method()));
             }
-            if ($cfp->$method() != $oldValues->$method()) {
+            if ($cfp->$method() !== $oldValues->$method()) {
+                if ($option == 'dateCfpStart' && $cfp->$method()->getTimestamp() < 100000) {
+                    continue;
+                }
                 $statementElements[] = '`' . $option . '` = :' . $option;
                 $values[$option]     = $cfp->$method();
                 if ($values[$option] instanceof \DateTimeInterface) {
                     $values[$option] = $values[$option]->format('c');
                 }
+                if ($values[$option] instanceof \DateTimeZone) {
+                    $values[$option] = $values[$option]->getName();
+                }
                 if (is_array($values[$option])) {
-                    $values[$option] = implode(',', $values[$option]);
+                    $values[$option] = implode(',', array_unique($values[$option]));
                 }
             }
         }
@@ -210,14 +225,26 @@ class CfpPersistenceLayer
         return $statement->execute(['hash' => $hash]);
     }
 
-    public function getCurrent()
+    public function getCurrent(\DateTimeInterface $startDate = null, \DateTimeInterface $endDate = null)
     {
-        $statement = 'SELECT * FROM `cfp` WHERE dateCfpEnd > :now AND dateCfpStart < :now';
+        $statement = 'SELECT * FROM `cfp` WHERE dateCfpEnd > :end AND dateCfpStart < :start';
 
         $statement = $this->pdo->prepare($statement);
 
+        $now = new \DateTime();
+        if (null === $startDate) {
+            $startDate = $now;
+        }
+        if (null === $endDate) {
+            $endDate = $now;
+        }
+
         $list = new \Callingallpapers\Api\Entity\CfpList();
-        $statement->execute(['now' => (new \DateTime())->format('c')]);
+        $statement->execute([
+            'end'   => $endDate->format('c'),
+            'start' => $startDate->format('c'),
+        ]);
+
         $content = $statement->fetchAll();
         if (count($content) < 1) {
             throw new \UnexpectedValueException('No CFPs found', 404);
@@ -241,6 +268,92 @@ class CfpPersistenceLayer
             $cfp->setTags(explode(',', $item['tags']));
             $cfp->setLastUpdated(new \DateTimeImmutable($item['lastUpdate']));
             $cfp->setSource(explode(',', $item['source']));
+
+            $list->add($cfp);
+        }
+
+        return $list;
+    }
+
+    public function search(array $parameters)
+    {
+        $fields = [
+            'name',
+            'tags',
+            'date_cfp_end',
+            'date_cfp_start',
+            'date_event_end',
+            'date_event_start',
+            'latitude',
+            'longitude',
+
+        ];
+        $transformer = new CaseTransformer(new SnakeCase(), new CamelCase());
+
+        $statement = 'SELECT * FROM `cfp` WHERE ';
+        $values    = [];
+        $where = [];
+        foreach ($parameters as $key => $value) {
+            if (! in_array($key, $fields)) {
+                continue;
+            }
+            if (! is_array($value)) {
+                $value = [$value];
+            }
+            foreach ($value as $itemkey => $item) {
+                $compare = '=';
+                if (in_array($key, [
+                    'date_cfp_end',
+                    'date_cfp_start',
+                    'date_event_end',
+                    'date_event_start'
+                ])) {
+                    if (array_key_exists($key . '_compare', $parameters) && isset($parameters[$key . '_compare'][$itemkey]) && in_array($parameters[$key . '_compare'][$itemkey], ['=', '<', '>', '<>'])) {
+                        $compare = $parameters[$key . '_compare'][$itemkey];
+                    }
+                    $where[] = 'datetime(`' . $transformer->transform($key) . '`) ' . $compare . ' datetime(:' . $key . '_' . $itemkey . ')';
+//                    $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' CONVERT_TZ(:' . $key . ', timezone, \'UTC\')';
+                    $value = (new DateTime($item))->setTimezone(new \DateTimeZone('UTC'))->format('c');
+                } else {
+                    $where[] = '`' . $transformer->transform($key) . '` ' . $compare . ' :' . $key;
+                }
+                $values[$key . '_' . $itemkey] = $value;
+            }
+        }
+        if (! $where) {
+            throw new \UnexpectedValueException('No CFPs found', 404);
+        }
+
+        $statement .= implode(' AND ', $where);
+
+        $statement = $this->pdo->prepare($statement);
+
+        $statement->execute($values);
+        error_log($statement->queryString);
+        $content = $statement->fetchAll();
+        if (count($content) < 1) {
+            throw new \UnexpectedValueException('No CFPs found', 404);
+        }
+
+        $list = new \Callingallpapers\Api\Entity\CfpList();
+        foreach ($content as $item) {
+            $cfp = new \Callingallpapers\Api\Entity\Cfp();
+            $cfp->setName($item['name']);
+            $cfp->setDateCfpEnd(new \DateTimeImmutable($item['dateCfpEnd']));
+            $cfp->setDateCfpStart(new \DateTimeImmutable($item['dateCfpStart']));
+            $cfp->setUri($item['uri']);
+            $cfp->setTimezone(new \DateTimeZone($item['timezone']));
+            $cfp->setDateEventStart(new \DateTimeImmutable($item['dateEventStart']));
+            $cfp->setDateEventEnd(new \DateTimeImmutable($item['dateEventEnd']));
+            $cfp->setDescription($item['description']);
+            $cfp->setEventUri($item['eventUri']);
+            $cfp->setIconUri($item['iconUri']);
+            $cfp->setLatitude($item['latitude']);
+            $cfp->setLongitude($item['longitude']);
+            $cfp->setLocation($item['location']);
+            $cfp->setTags(explode(',', $item['tags']));
+            $cfp->setLastUpdated(new \DateTimeImmutable($item['lastUpdate']));
+         //   $cfp->setSource(explode(',', $item['source']));
 
             $list->add($cfp);
         }
