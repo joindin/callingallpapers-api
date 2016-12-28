@@ -34,10 +34,20 @@ namespace CallingallpapersTest\Api\PersistenceLayer;
 use Callingallpapers\Api\Entity\Cfp;
 use Callingallpapers\Api\Entity\CfpList;
 use Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer;
+use Org_Heigl\PdoTimezoneHelper\Handler\PdoTimezoneHandlerInterface;
+use Org_Heigl\PdoTimezoneHelper\PdoTimezoneHelper;
 
 class CfpPersistenceLayerTest extends \PHPUnit_Extensions_Database_TestCase
 {
     private $pdo = null;
+
+    private $timezoneHelper = null;
+
+    public function setUp()
+    {
+        $this->timezoneHelper = $this->getMockBuilder(PdoTimezoneHandlerInterface::class)->getMock();
+        parent::setUp();
+    }
 
     protected function getSetUpOperation()
     {
@@ -86,7 +96,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 
     public function testCreation()
     {
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $this->assertInstanceof('Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer', $cpl);
     }
@@ -94,7 +104,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     public function testCreateEntry()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'), "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
         $cfp->setEventUri('http://example.com');
@@ -107,7 +117,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
      */
     public function testCreatingAnEntryTwice()
     {
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
         $cfp = new Cfp;
         $cfp->setEventUri('http://example.com');
         $cpl->insert($cfp);
@@ -117,7 +127,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     public function testSelectingEntries()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'), "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $content = $cpl->select();
         $this->assertInstanceof('Callingallpapers\Api\Entity\CfpList', $content);
@@ -127,7 +137,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     public function testSelectingEntry()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'), "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $content = $cpl->select('ff');
         $this->assertInstanceof('Callingallpapers\Api\Entity\CfpList', $content);
@@ -140,7 +150,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     public function testSelectingEntryWithNonExistentHash()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'), "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $content = $cpl->select('fg');
         $this->assertInstanceof('Callingallpapers\Api\Entity\CfpList', $content);
@@ -150,7 +160,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     public function testRemovingEntry()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'), "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $this->assertTrue($cpl->delete('ff'));
         $this->assertEquals(1, $this->getConnection()->getRowCount('cfp'));
@@ -159,7 +169,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     public function testRemovingEntryFailsWithWrongHash()
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'), "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cpl->delete('fa');
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'));
@@ -169,7 +179,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
             "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
         $cfp->setEventUri('http://example.com');
@@ -186,7 +196,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
             "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
         $cfp->setEventUri('http://example.com');
@@ -205,7 +215,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     {
         $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
             "Pre-Condition");
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
         $cfp->setEventUri('http://example.com');
@@ -226,7 +236,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
      */
     public function testUpdatingUnknownHashDoesNotWork()
     {
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $this->assertEquals(0, $cpl->select('fg')->count());
         $cfp = new Cfp;
@@ -239,7 +249,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
      */
     public function testUpdatingWithoutHashDoesNotWork()
     {
-        $cpl = new CfpPersistenceLayer($this->pdo);
+        $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
         $cpl->update($cfp, null);
