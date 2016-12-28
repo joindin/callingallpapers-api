@@ -133,13 +133,12 @@ class CfpFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals(new \DateTimeImmutable($value), 'dateCfpStart', $cfp);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testThatSettingDateCfpStartFailsWithMissingArrayEntry()
+    public function testThatSettingDateCfpStartWorksEvenWithMissingArrayEntry()
     {
         $cfp = new Cfp();
         CfpFactory::setDateCfpStart($cfp, []);
+
+        $this->assertAttributeEquals(new \DateTimeImmutable('@0'), 'dateCfpStart', $cfp);
     }
 
     /**
