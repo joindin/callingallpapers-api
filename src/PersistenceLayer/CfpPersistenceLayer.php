@@ -297,10 +297,10 @@ class CfpPersistenceLayer
             if (! in_array($key, $fields)) {
                 continue;
             }
-            if (! is_array($value)){
+            if (! is_array($value)) {
                 $value = [$value];
             }
-            foreach($value as $itemkey => $item) {
+            foreach ($value as $itemkey => $item) {
                 $compare = '=';
                 if (in_array($key, [
                     'date_cfp_end',
