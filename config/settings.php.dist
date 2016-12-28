@@ -18,6 +18,7 @@ return [
             'dsn' => 'sqlite:' . __DIR__ . '/../tmp/callingallpapers.sqlite',
             'username' => null,
             'password' => null,
+            'timezonefield' => 'timezone',
         ],
     ],
 ];
