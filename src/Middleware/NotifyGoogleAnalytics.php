@@ -36,14 +36,11 @@ use TheIconic\Tracking\GoogleAnalytics\Analytics;
 
 class NotifyGoogleAnalytics
 {
-    protected $trackingId;
+    private $analytics;
 
-    private $clientId;
-
-    public function __construct($trackingId, $clientId)
+    public function __construct(Analytics $analytics)
     {
-        $this->trackingId = $trackingId;
-        $this->clientId   = $clientId;
+        $this->analytics = $analytics;
     }
 
     /**
@@ -62,20 +59,14 @@ class NotifyGoogleAnalytics
     ) {
         $response = $next($request, $response);
 
-        $analytics = new Analytics(true);
-
-        $analytics->setProtocolVersion(1)
-            ->setTrackingId($this->trackingId)
-            ->setClientId($this->clientId)
-            ->setEventCategory($request->getUri()->getPath())
-            ->setEventAction($request->getMethod())
-            ->setEventLabel('type')
-            ->setEventValue($response->getHeader('Content-Type')[0])
-            ->setAnonymizeIp(true)
-            ->setIpOverride($request->getAttribute('ip_address'))
-            ->setUserAgentOverride($request->getHeader('User-Agent'))
-            ->setAsyncRequest(true)
-            ->sendEvent();
+        $this->analytics
+             ->setEventCategory($request->getUri()->getPath())
+             ->setEventAction($request->getMethod())
+             ->setEventLabel('type')
+             ->setEventValue($response->getHeader('Content-Type')[0])
+             ->setIpOverride($request->getAttribute('ip_address'))
+             ->setUserAgentOverride($request->getHeader('User-Agent'))
+             ->sendEvent();
 
         return $response;
     }
