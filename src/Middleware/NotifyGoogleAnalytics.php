@@ -30,19 +30,20 @@
 
 namespace Callingallpapers\Api\Middleware;
 
-use Callingallpapers\Api\PersistenceLayer\UserPersistenceLayer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Sabre\VObject\UUIDUtil;
 use TheIconic\Tracking\GoogleAnalytics\Analytics;
 
 class NotifyGoogleAnalytics
 {
     protected $trackingId;
 
-    public function __construct($trackingId)
+    private $clientId;
+
+    public function __construct($trackingId, $clientId)
     {
         $this->trackingId = $trackingId;
+        $this->clientId   = $clientId;
     }
 
     /**
@@ -65,9 +66,9 @@ class NotifyGoogleAnalytics
 
         $analytics->setProtocolVersion(1)
             ->setTrackingId($this->trackingId)
-            ->setClientId(UUIDUtil::getUUID())
-            ->setEventCategory('cfp')
-            ->setEventAction('read')
+            ->setClientId($this->clientId)
+            ->setEventCategory($request->getUri()->getPath())
+            ->setEventAction($request->getMethod())
             ->setEventLabel('type')
             ->setEventValue($response->getHeader('Content-Type')[0])
             ->setAnonymizeIp(true)
