@@ -31,7 +31,6 @@ use TheIconic\Tracking\GoogleAnalytics\Analytics;
 
 class NotifyGoogleAnalyticsTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testThatInstantiationWorksAsExpected()
     {
         $ga = $this->getMockBuilder(Analytics::class)->disableOriginalConstructor()->getMock();
