@@ -31,3 +31,14 @@ $container['timezoneHelper'] = function($c) {
 
     return $tzh;
 };
+
+$container['googleAnalytics'] = function($c) {
+    $ga = new \TheIconic\Tracking\GoogleAnalytics\Analytics(true);
+    $ga->setProtocolVersion(1)
+       ->setTrackingId($c->get('settings')['ga']['trackingCode'])
+       ->setClientId(\Sabre\VObject\UUIDUtil::getUUID())
+       ->setAnonymizeIp(true)
+       ->setAsyncRequest(true);
+
+    return $ga;
+};

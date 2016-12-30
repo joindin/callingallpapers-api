@@ -20,5 +20,8 @@ return [
             'password' => null,
             'timezonefield' => 'timezone',
         ],
+        'ga' => [
+            'trackingCode' => '<your GA tracking-Code>'
+        ],
     ],
 ];
