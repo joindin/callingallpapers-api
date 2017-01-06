@@ -48,7 +48,7 @@ $app->post('/v1/cfp', function(
     }
 
     $cfpFactory = new \Callingallpapers\Api\Service\CfpFactory();
-    $cfp = $cfpFactory->createCfp($params);
+    $cfp = $cfpFactory->createCfp($params, $app->getContainer()['client']);
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
         $app->getContainer()['pdo'],
@@ -73,7 +73,7 @@ $app->put('/v1/cfp/{hash}', function (
     }
 
     $cfpFactory = new \Callingallpapers\Api\Service\CfpFactory();
-    $cfp = $cfpFactory->createCfp($params);
+    $cfp = $cfpFactory->createCfp($params, $app->getContainer()['client']);
 
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
         $app->getContainer()['pdo'],

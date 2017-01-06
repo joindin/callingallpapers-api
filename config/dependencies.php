@@ -42,3 +42,7 @@ $container['googleAnalytics'] = function($c) {
 
     return $ga;
 };
+
+$container['client'] = function($c) {
+    return new \GuzzleHttp\Client();
+};

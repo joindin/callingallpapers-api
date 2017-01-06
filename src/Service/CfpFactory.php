@@ -29,6 +29,8 @@ namespace Callingallpapers\Api\Service;
 
 use Callingallpapers\Api\Entity\Cfp;
 use DateTimeImmutable;
+use GuzzleHttp\Client;
+use GuzzleHttp\TransferStats;
 
 class CfpFactory
 {
@@ -43,7 +45,7 @@ class CfpFactory
      *
      * @return Cfp
      */
-    public function createCfp(array $params)
+    public function createCfp(array $params, Client $client)
     {
         $requiredFields = ['name', 'dateCfpEnd', 'uri', 'eventUri', 'timezone'];
         $missingFields = [];
@@ -67,7 +69,7 @@ class CfpFactory
         self::setDateCfpEnd($cfp, $params);
         self::setTimezone($cfp, $params);
         self::setUri($cfp, $params);
-        self::setEventUri($cfp, $params);
+        self::setEventUri($cfp, $params, $client);
         self::setDateEventStart($cfp, $params);
         self::setDateEventEnd($cfp, $params);
         self::setIconUri($cfp, $params);
@@ -121,13 +123,24 @@ class CfpFactory
         $cfp->setUri(filter_var($array['uri'], FILTER_VALIDATE_URL));
     }
 
-    public static function setEventUri(Cfp $cfp, array $array)
+    public static function setEventUri(Cfp $cfp, array $array, Client $client)
     {
         if (! isset($array['eventUri'])) {
             throw new \InvalidArgumentException('Event-URI has to be specified');
         }
 
-        $cfp->setEventUri(filter_var($array['eventUri'], FILTER_VALIDATE_URL));
+        try {
+            $uri = '';
+            $client->get($array['eventUri'], [
+                'on_stats' => function (TransferStats $stats) use (&$uri) {
+                    $uri = $stats->getEffectiveUri();
+                }
+            ]);
+        } catch (\Exception $e) {
+            throw new \InvalidArgumentException('Event-URI could not be verified: ' . $e->getMessage());
+        }
+
+        $cfp->setEventUri(filter_var($uri, FILTER_VALIDATE_URL));
     }
 
     public static function setDateEventStart(Cfp $cfp, array $array)
@@ -185,12 +198,16 @@ class CfpFactory
             return;
         }
 
-        $latitude  = filter_var($array['latitude'],
+        $latitude  = filter_var(
+            $array['latitude'],
             FILTER_SANITIZE_NUMBER_FLOAT,
-            FILTER_FLAG_ALLOW_FRACTION);
-        $longitude = filter_var($array['longitude'],
+            FILTER_FLAG_ALLOW_FRACTION
+        );
+        $longitude = filter_var(
+            $array['longitude'],
             FILTER_SANITIZE_NUMBER_FLOAT,
-            FILTER_FLAG_ALLOW_FRACTION);
+            FILTER_FLAG_ALLOW_FRACTION
+        );
 
         if ($latitude > 90 || $latitude < - 90) {
             throw new \UnexpectedValueException(sprintf(
