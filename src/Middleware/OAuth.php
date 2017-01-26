@@ -57,7 +57,7 @@ class OAuth
         ResponseInterface $response,
         callable $next
     ) {
-        $auth = $request->getHeader('Authenticate');
+        $auth = $request->getHeader('Authorization');
         if ($request->getMethod() === 'GET') {
             // Get is allowed without authentication
             // Rate-Limit is handlede by another Middleware

@@ -21,7 +21,7 @@ return [
             'timezonefield' => 'timezone',
         ],
         'ga' => [
-            'trackingCode' => '<your GA tracking-Code>'
+            'trackingCode' => '<your GA tracking-Code>',
         ],
     ],
 ];

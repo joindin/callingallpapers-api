@@ -65,7 +65,7 @@ class NotifyGoogleAnalytics
              ->setEventLabel('type')
              ->setEventValue($response->getHeader('Content-Type')[0])
              ->setIpOverride($request->getAttribute('ip_address'))
-             ->setUserAgentOverride($request->getHeader('User-Agent'))
+             ->setUserAgentOverride($request->getHeader('User-Agent')[0])
              ->sendEvent();
 
         return $response;

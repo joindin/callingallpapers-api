@@ -29,6 +29,7 @@ namespace CallingallpapersTest\Service;
 
 use Callingallpapers\Api\Entity\Cfp;
 use Callingallpapers\Api\Service\CfpFactory;
+use GuzzleHttp\Client;
 use Mockery as M;
 
 class CfpFactoryTest extends \PHPUnit_Framework_TestCase
@@ -220,12 +221,12 @@ class CfpFactoryTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider ProvideUri
+     * @dataProvider ProvideSanitizedUri
      */
     public function testThatSettingEventUriWorksWithCorrectString($expected, $value)
     {
         $cfp = new Cfp();
-        CfpFactory::setEventUri($cfp, ['eventUri' => $value]);
+        CfpFactory::setEventUri($cfp, ['eventUri' => $value], new Client());
 
         $this->assertAttributeEquals($expected, 'eventUri', $cfp);
     }
@@ -255,7 +256,7 @@ class CfpFactoryTest extends \PHPUnit_Framework_TestCase
     public function testThatSettingEventUriFailsWithMissingArrayEntry()
     {
         $cfp = new Cfp();
-        CfpFactory::setEventUri($cfp, []);
+        CfpFactory::setEventUri($cfp, [], M::mock(Client::class));
     }
 
 
@@ -304,8 +305,16 @@ class CfpFactoryTest extends \PHPUnit_Framework_TestCase
     public function provideUri()
     {
         return [
-            ['http://example.com', 'http://example.com'],
+            ['http://example.com/', 'http://example.com/'],
             ['', 'grummel'],
+        ];
+    }
+
+    public function provideSanitizedUri()
+    {
+        return [
+            ['http://example.com', 'http://example.com'],
+            ['https://www.wdv.de/', 'http://wdv.de'],
         ];
     }
 
