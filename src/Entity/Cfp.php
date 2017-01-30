@@ -112,7 +112,7 @@ class Cfp
 
     public function __construct()
     {
-        $this->dateCfpStart   = new \DateTimeImmutable();
+        $this->dateCfpStart   = new \DateTimeImmutable('@0');
         $this->dateCfpEnd     = new \DateTimeImmutable();
         $this->dateEventStart = new \DateTimeImmutable();
         $this->dateEventEnd   = new \DateTimeImmutable();
