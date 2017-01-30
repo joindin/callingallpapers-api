@@ -49,7 +49,8 @@ class CfpListMapper
                 'iconUri'        => $cfp->getIconUri(),
                 'eventUri'       => $cfp->getEventUri(),
                 'timezone'       => $cfp->getTimezone()->getName(),
-                'tags'           => $cfp->getTags(),
+                'tags'           => array_unique($cfp->getTags()),
+                'sources'        => array_values(array_filter(array_unique($cfp->getSource()))),
                 'lastChange'     => $cfp->getLastUdated()->format('c'),
                 '_rel'            => [
                     'cfp_uri'    => 'v1/cfp/' . $cfp->getHash(),
