@@ -5,8 +5,20 @@ matrix:
   include:
   - php: 7.0
     env:
-    - EXECUTE_CS_CHECK=true
-    - EXECUTE_TEST_COVERALLS=true
+      - EXECUTE_CS_CHECK=true
+      - EXECUTE_TEST_COVERALLS=true
+  - php: 7.0
+    env:
+      - DEPS=latest
+  - php: 7.0
+    env:
+      - DEPS=lowest
+  - php: 7.1
+    env:
+      - DEPS=latest
+  - php: 7.1
+    env:
+      - DEPS=lowest
   - php: 7.1
   - php: hhvm
   - php: nightly
@@ -17,6 +29,8 @@ matrix:
 before_install:
 - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini ||
   return 0; fi
+- if [[ $DEPS == 'latest' ]]; then travis_retry composer update ; fi
+- if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable ; fi
 - composer self-update
 
 install:
