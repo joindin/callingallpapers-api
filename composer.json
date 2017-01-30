@@ -3,17 +3,18 @@
     "description" : "The API powering callingallpapers.com",
     "license": "MIT",
     "require": {
-        "slim/slim": "^3.0",
+        "akrabat/rka-ip-address-middleware": "^0.5.0",
         "aporat/slim-json-helpers": "^1.0",
-        "sabre/vobject": "^4.0",
-        "slim/twig-view": "^2.0",
-        "monolog/monolog": "^1.17",
-        "zendframework/zend-feed": "^2.7",
-        "org_heigl/clacks-middleware": "^1.1",
+        "guzzlehttp/guzzle": "^6.2",
         "mattketmo/camel": "^1.1",
+        "monolog/monolog": "^1.17",
+        "org_heigl/clacks-middleware": "^1.1",
         "org_heigl/pdo_timezone_helper": "dev-master",
+        "sabre/vobject": "^4.0",
+        "slim/slim": "^3.0",
+        "slim/twig-view": "^2.0",
         "theiconic/php-ga-measurement-protocol": "^2.1",
-        "akrabat/rka-ip-address-middleware": "^0.5.0"
+        "zendframework/zend-feed": "^2.7"
     },
     "autoload" : {
         "psr-4": {
@@ -33,7 +34,7 @@
     },
     "scripts" : {
         "cs-download" : [
-            "if [ ! -e php-cs-fixer ] ; then curl -o php-cs-fixer -L `curl -s https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/releases | grep browser_download_url | head -n 1 | cut -d '\"' -f 4`; fi",
+            "if [ ! -e php-cs-fixer ] ; then curl -o php-cs-fixer -L `curl -s https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/releases | grep browser_download_url | head -n 1 | cut -d '\"' -f 4` ; fi",
             "chmod 755 php-cs-fixer"
         ],
         "cs-check" : [
