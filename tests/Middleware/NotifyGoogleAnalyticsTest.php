@@ -27,7 +27,11 @@
 namespace CallingallpapersTest\Api\Middleware;
 
 use Callingallpapers\Api\Middleware\NotifyGoogleAnalytics;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use TheIconic\Tracking\GoogleAnalytics\Analytics;
+use Mockery as M;
 
 class NotifyGoogleAnalyticsTest extends \PHPUnit_Framework_TestCase
 {
@@ -37,6 +41,39 @@ class NotifyGoogleAnalyticsTest extends \PHPUnit_Framework_TestCase
         $inst = new NotifyGoogleAnalytics($ga);
 
         $this->assertInstanceOf(NotifyGoogleAnalytics::class, $inst);
-        $this->assertAttributeEquals($ga, 'analytics', $inst);
+        $this->assertAttributeSame($ga, 'analytics', $inst);
+    }
+
+    public function testThatGAisNotified()
+    {
+        $request = M::mock(ServerRequestInterface::class);
+        $response = M::mock(ResponseInterface::class);
+
+        $uri = M::mock(UriInterface::class);
+        $uri->shouldReceive('getPath')->once()->andReturn('path');
+
+        $request->shouldReceive('getUri')->once()->andReturn($uri);
+        $request->shouldReceive('getMethod')->once()->andREturn('action');
+
+        $response->shouldReceive('getHeader')->once()->with('Content-Type')->andReturn(['value']);
+        $request->shouldReceive('getAttribute')->once()->with('ip_address')->andReturn('ip');
+        $request->shouldReceive('getHeader')->once()->with('User-Agent')->andReturn(['agent']);
+
+        $callable = function (ServerRequestInterface $request, ResponseInterface $response) {
+            return $response;
+        };
+
+        $ga = M::mock(Analytics::class);
+        $ga->shouldReceive('setEventCategory')->once()->with('path')->andReturn($ga);
+        $ga->shouldReceive('setEventAction')->once()->with('action')->andReturn($ga);
+        $ga->shouldReceive('setEventLabel')->once()->with('type')->andReturn($ga);
+        $ga->shouldReceive('setEventValue')->once()->with('value')->andReturn($ga);
+        $ga->shouldReceive('setIpOverride')->once()->with('ip')->andReturn($ga);
+        $ga->shouldReceive('setUserAgentOverride')->once()->with('agent')->andReturn($ga);
+        $ga->shouldReceive('sendEvent');
+
+        $inst = new NotifyGoogleAnalytics($ga);
+
+        $this->assertSame($response, $inst($request, $response, $callable));
     }
 }
