@@ -13,26 +13,22 @@ matrix:
   allow_failures:
   - php: hhvm
   - php: nightly
+
 before_install:
 - if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini ||
   return 0; fi
 - composer self-update
-- if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then composer require --dev --no-update
-  satooshi/php-coveralls; composer update satooshi/php-coveralls; fi
 
 install:
 - travis_retry composer install --no-interaction --ignore-platform-reqs
+
 script:
-- if [[ $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/phpunit -c phpunit.travis.xml
-  --coverage-clover build/logs/clover.xml ; fi
-- if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then ./vendor/bin/phpunit -c phpunit.travis.xml;
-  fi
-- if [[ $EXECUTE_CS_CHECK == 'true' ]]; then ./vendor/bin/php-cs-fixer fix -v --diff
-  --dry-run ; fi
+- composer test
+- if [[ $EXECUTE_CS_CHECK == 'true' ]]; then composer cs-check ; fi
+
 after_script:
 - if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]] ; then
  openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv
     -in deploy-key.enc -out deploy-key -d && chmod 600 deploy-key; fi
-- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]]; then ./vendor/bin/coveralls ; fi
-- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]] ; then
-  ./vendor/bin/phing deploy; fi
+- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]]; then  composer sendcoverage ; fi
+- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]] ; then ./vendor/bin/phing deploy; fi

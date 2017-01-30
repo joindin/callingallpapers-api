@@ -13,7 +13,7 @@
         "mattketmo/camel": "^1.1",
         "org_heigl/pdo_timezone_helper": "dev-master",
         "theiconic/php-ga-measurement-protocol": "^2.1",
-        "akrabat/rka-ip-address-middleware": "^0.4.0"
+        "akrabat/rka-ip-address-middleware": "^0.5.0"
     },
     "autoload" : {
         "psr-4": {
@@ -26,10 +26,27 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.11",
         "mockery/mockery": "^0.9.7",
         "phing/phing": "^2.14",
         "phpunit/dbunit": "^2.0",
         "phpunit/phpunit": "^5.2"
+    },
+    "scripts" : {
+        "cs-download" : [
+            "if [ ! -e php-cs-fixer ] ; then curl -o php-cs-fixer -L `curl -s https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/releases | grep browser_download_url | head -n 1 | cut -d '\"' -f 4`; fi",
+            "chmod 755 php-cs-fixer"
+        ],
+        "cs-check" : [
+            "composer cs-download",
+            "php-cs-fixer fix -v --diff --dry-run"
+        ],
+        "test" : [
+            "./vendor/bin/phpunit -c phpunit.travis.xml --coverage-clover build/logs/clover.xml"
+        ],
+        "sendcoverage" : [
+            "curl -o coveralls -L `curl -s https://api.github.com/repos/satooshi/php-coveralls/releases | grep browser_download_url | head -n 1 | cut -d '\"' -f 4`",
+            "chmod 755 coveralls",
+            ""
+        ]
     }
 }
