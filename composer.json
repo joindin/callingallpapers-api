@@ -3,17 +3,18 @@
     "description" : "The API powering callingallpapers.com",
     "license": "MIT",
     "require": {
-        "slim/slim": "^3.0",
+        "akrabat/rka-ip-address-middleware": "^0.5.0",
         "aporat/slim-json-helpers": "^1.0",
-        "sabre/vobject": "^4.0",
-        "slim/twig-view": "^2.0",
-        "monolog/monolog": "^1.17",
-        "zendframework/zend-feed": "^2.7",
-        "org_heigl/clacks-middleware": "^1.1",
+        "guzzlehttp/guzzle": "^6.2",
         "mattketmo/camel": "^1.1",
+        "monolog/monolog": "^1.17",
+        "org_heigl/clacks-middleware": "^1.1",
         "org_heigl/pdo_timezone_helper": "dev-master",
+        "sabre/vobject": "^4.0",
+        "slim/slim": "^3.0",
+        "slim/twig-view": "^2.0",
         "theiconic/php-ga-measurement-protocol": "^2.1",
-        "akrabat/rka-ip-address-middleware": "^0.4.0"
+        "zendframework/zend-feed": "^2.7"
     },
     "autoload" : {
         "psr-4": {
@@ -26,10 +27,27 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^1.11",
         "mockery/mockery": "^0.9.7",
         "phing/phing": "^2.14",
         "phpunit/dbunit": "^2.0",
         "phpunit/phpunit": "^5.2"
+    },
+    "scripts" : {
+        "cs-download" : [
+            "curl -o php-cs-fixer -L https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.0.0/php-cs-fixer.phar",
+            "chmod 755 php-cs-fixer"
+        ],
+        "cs-check" : [
+            "composer cs-download",
+            "php-cs-fixer fix -v --diff --dry-run"
+        ],
+        "test" : [
+            "./vendor/bin/phpunit -c phpunit.travis.xml --coverage-clover build/logs/clover.xml"
+        ],
+        "sendcoverage" : [
+            "curl -o coveralls -L https://github.com/satooshi/php-coveralls/releases/download/v1.0.1/coveralls.phar",
+            "chmod 755 coveralls",
+            "coveralls"
+        ]
     }
 }
