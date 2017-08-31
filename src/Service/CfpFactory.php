@@ -111,6 +111,11 @@ class CfpFactory
         if (! isset($array['timezone'])) {
             throw new \InvalidArgumentException('Timezone has to be specified');
         }
+
+        if (isset($array['timezone']['timezone'])) {
+            $array['timezone'] = $array['timezone']['timezone'];
+        }
+
         $cfp->setTimezone(filter_var($array['timezone'], FILTER_SANITIZE_STRING));
     }
 
