@@ -315,6 +315,7 @@ class CfpFactoryTest extends \PHPUnit_Framework_TestCase
         return [
             ['http://example.com', 'http://example.com'],
             ['https://www.wdv.de/', 'http://wdv.de'],
+            ['http://example.com', 'http://example.com?test'],
         ];
     }
 

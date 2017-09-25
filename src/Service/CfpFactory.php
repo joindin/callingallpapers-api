@@ -145,6 +145,12 @@ class CfpFactory
             throw new \InvalidArgumentException('Event-URI could not be verified: ' . $e->getMessage());
         }
 
+        $uri = (string) $uri;
+        $pos = strpos($uri, '?');
+        if ($pos !== false) {
+            $uri = substr($uri, 0, $pos);
+        }
+
         $cfp->setEventUri(filter_var($uri, FILTER_VALIDATE_URL));
     }
 
