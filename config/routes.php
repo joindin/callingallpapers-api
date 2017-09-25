@@ -48,8 +48,11 @@ $app->post('/v1/cfp', function(
     }
 
     $cfpFactory = new \Callingallpapers\Api\Service\CfpFactory();
-    $cfp = $cfpFactory->createCfp($params, $app->getContainer()['client']);
-
+    try {
+        $cfp = $cfpFactory->createCfp($params, $app->getContainer()['client']);
+    } catch (\Exception $e) {
+        error_log($e->getMessage() . "\n" . $e->getTraceAsString());
+    }
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
         $app->getContainer()['pdo'],
         $app->getContainer()['timezoneHelper']
