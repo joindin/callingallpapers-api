@@ -9,7 +9,7 @@ final class CfpTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function setEventUriTrimsTrailingSlash(): void
+    public function setEventUriTrimsTrailingSlash()
     {
         $uri = 'https://some/uri';
 
