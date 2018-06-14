@@ -57,8 +57,11 @@ class CfpPersistenceLayerTest extends \PHPUnit_Extensions_Database_TestCase
     public function getConnection()
     {
         if (null === $this->pdo) {
-            $this->pdo = new \PDO($GLOBALS['DB_DSN'], $GLOBALS['DB_USER'],
-                $GLOBALS['DB_PASS']);
+            $this->pdo = new \PDO(
+                $GLOBALS['DB_DSN'],
+                $GLOBALS['DB_USER'],
+                $GLOBALS['DB_PASS']
+            );
             $this->pdo->exec('CREATE TABLE cfp
             (
                 id INTEGER PRIMARY KEY,
@@ -83,7 +86,7 @@ class CfpPersistenceLayerTest extends \PHPUnit_Extensions_Database_TestCase
 CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 ');
         }
-        return $this->createDefaultDBConnection($this->pdo,  $GLOBALS['DB_NAME']);
+        return $this->createDefaultDBConnection($this->pdo, $GLOBALS['DB_NAME']);
     }
 
     /**
@@ -177,16 +180,22 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 
     public function testUpdatingEntry()
     {
-        $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
-            "Pre-Condition");
+        $this->assertEquals(
+            2,
+            $this->getConnection()->getRowCount('cfp'),
+            "Pre-Condition"
+        );
         $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
         $cfp->setEventUri('http://example.com');
         $newHash = $cpl->update($cfp, 'ff');
         $this->assertEquals(sha1('http://example.com'), $newHash);
-        $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
-            "Post-Condition");
+        $this->assertEquals(
+            2,
+            $this->getConnection()->getRowCount('cfp'),
+            "Post-Condition"
+        );
 
         $results = $cpl->select(sha1('http://example.com'));
         $this->assertEquals(1, $results->count());
@@ -194,8 +203,11 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 
     public function testThatUpdatingAnEntryWhereMergeOfTagsIsNecessaryWorks()
     {
-        $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
-            "Pre-Condition");
+        $this->assertEquals(
+            2,
+            $this->getConnection()->getRowCount('cfp'),
+            "Pre-Condition"
+        );
         $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
@@ -204,7 +216,8 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $newHash = $cpl->update($cfp, 'ff');
 
         $queryTable = $this->getConnection()->createQueryTable(
-            'cfp', 'SELECT tags FROM cfp WHERE hash="' . $newHash . '";'
+            'cfp',
+            'SELECT tags FROM cfp WHERE hash="' . $newHash . '";'
         );
         $expectedTable = $this->createFlatXmlDataSet(__DIR__ . "/_assets/expectedTags.xml")
                               ->getTable("cfp");
@@ -213,8 +226,11 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 
     public function testThatUpdatingAnEntryWhereMergeOfSourcesIsNecessaryWorks()
     {
-        $this->assertEquals(2, $this->getConnection()->getRowCount('cfp'),
-            "Pre-Condition");
+        $this->assertEquals(
+            2,
+            $this->getConnection()->getRowCount('cfp'),
+            "Pre-Condition"
+        );
         $cpl = new CfpPersistenceLayer($this->pdo, $this->timezoneHelper);
 
         $cfp = new Cfp;
@@ -223,7 +239,8 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $newHash = $cpl->update($cfp, 'ff');
 
         $queryTable = $this->getConnection()->createQueryTable(
-            'cfp', 'SELECT source FROM cfp WHERE hash="' . $newHash . '";'
+            'cfp',
+            'SELECT source FROM cfp WHERE hash="' . $newHash . '";'
         );
         $expectedTable = $this->createFlatXmlDataSet(__DIR__ . "/_assets/expectedSources_1.xml")
                               ->getTable("cfp");
