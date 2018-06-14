@@ -1,34 +1,52 @@
 sudo: false
 language: php
+
+php:
+- 7.0
+- 7.1
+- 7.2
+- nightly
+
 matrix:
   fast_finish: true
-  include:
-  - php: 7.0
-    env:
-      - EXECUTE_CS_CHECK=true
-      - EXECUTE_TEST_COVERALLS=true
-  - php: 7.0
-    env:
-      - DEPS=latest
-  - php: 7.0
-    env:
-      - DEPS=lowest
-  - php: 7.1
-    env:
-      - DEPS=latest
-  - php: 7.1
-    env:
-      - DEPS=lowest
-  - php: 7.1
-  - php: hhvm
-  - php: nightly
   allow_failures:
-  - php: hhvm
-  - php: nightly
+  - nightly
+
+stages:
+- check
+- test
+- coverage
+- deploy
+
+jobs:
+  include:
+  - stage: check
+    php: 7.2
+    script:
+    - composer cs-check
+  - stage: test
+    script:
+    - composer test
+  - stage: coverage
+    if: branch = master AND type = push
+    php: 7.2
+    env: TEST_COVERAGE=true
+    before_install:
+    - phpenv config-rm xdebug.ini
+    script:
+    - composer test
+    after_script:
+    - composer sendcoverage
+  - stage: deploy
+    if: branch = master AND type = push
+    script:
+    after_script:
+    - openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv -in deploy-key.enc -out deploy-key -d && chmod 600 deploy-key;
+    - ./vendor/bin/phing deploy;
+
+
 
 before_install:
-- if [[ $EXECUTE_TEST_COVERALLS != 'true' ]]; then phpenv config-rm xdebug.ini ||
-  return 0; fi
 - if [[ $DEPS == 'latest' ]]; then travis_retry composer update ; fi
 - if [[ $DEPS == 'lowest' ]]; then travis_retry composer update --prefer-lowest --prefer-stable ; fi
 - composer self-update
@@ -36,13 +54,3 @@ before_install:
 install:
 - travis_retry composer install --no-interaction --ignore-platform-reqs
 
-script:
-- composer test
-- if [[ $EXECUTE_CS_CHECK == 'true' ]]; then composer cs-check ; fi
-
-after_script:
-- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]] ; then
- openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv
-    -in deploy-key.enc -out deploy-key -d && chmod 600 deploy-key; fi
-- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]]; then  composer sendcoverage ; fi
-- if [[ $TRAVIS_PULL_REQUEST == "false" && $TRAVIS_BRANCH == "master" && $EXECUTE_TEST_COVERALLS == 'true' ]] ; then ./vendor/bin/phing deploy; fi
