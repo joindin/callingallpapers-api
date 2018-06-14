@@ -34,12 +34,12 @@
     },
     "scripts" : {
         "cs-download" : [
-            "curl -o php-cs-fixer -L https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.0.0/php-cs-fixer.phar",
-            "chmod 755 php-cs-fixer"
+            "curl -o phpcs -L https://api.getlatestassets.com/github/squizlabs/PHP_CodeSniffer/phpcs.phar",
+            "chmod 755 phpcs"
         ],
         "cs-check" : [
             "composer cs-download",
-            "php-cs-fixer fix -v --diff --dry-run"
+            "phpcs"
         ],
         "test" : [
             "./vendor/bin/phpunit -c phpunit.travis.xml --coverage-clover build/logs/clover.xml"

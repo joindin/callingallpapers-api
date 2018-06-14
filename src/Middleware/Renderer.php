@@ -68,10 +68,12 @@ class Renderer
             $container         = $this->app->getContainer();
             $container['view'] = function ($container) {
                 $config = $container['settings'];
-                $tView  = new \Slim\Views\Twig($config['renderer']['template_path'],
+                $tView  = new \Slim\Views\Twig(
+                    $config['renderer']['template_path'],
                     [
                         'cache' => $config['renderer']['cache_path'],
-                    ]);
+                    ]
+                );
                 $tView->addExtension(new \Slim\Views\TwigExtension(
                     $container['router'],
                     $container['request']->getUri()

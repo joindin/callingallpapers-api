@@ -41,10 +41,10 @@ class ConvertTypeToAcceptTest extends \PHPUnit_Framework_TestCase
 
         // We need a request and response object to invoke the action
         $environment = \Slim\Http\Environment::mock([
-                'REQUEST_METHOD' => 'GET',
-                'REQUEST_URI' => '/echo',
-                'QUERY_STRING'=>$queryString]
-        );
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/echo',
+            'QUERY_STRING'=>$queryString
+        ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
 
@@ -75,10 +75,10 @@ class ConvertTypeToAcceptTest extends \PHPUnit_Framework_TestCase
 
         // We need a request and response object to invoke the action
         $environment = \Slim\Http\Environment::mock([
-                'REQUEST_METHOD' => 'GET',
-                'REQUEST_URI' => '/echo',
-                'QUERY_STRING'=>'type=' . $parameter]
-        );
+            'REQUEST_METHOD' => 'GET',
+            'REQUEST_URI' => '/echo',
+            'QUERY_STRING'=>'type=' . $parameter
+        ]);
         $request = \Slim\Http\Request::createFromEnvironment($environment);
         $response = new \Slim\Http\Response();
 
