@@ -236,7 +236,7 @@ class Cfp
 
     public function setEventUri($eventUri)
     {
-        $this->eventUri = $eventUri;
+        $this->eventUri = rtrim($eventUri, '/');
     }
 
     public function getEventUri()
