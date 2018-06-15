@@ -18,4 +18,23 @@ final class CfpTest extends \PHPUnit_Framework_TestCase
 
         self::assertEquals($uri, $cfp->getEventUri());
     }
+
+    public function testThatAddingASourceActuallyWorks()
+    {
+        $cfp = new Cfp();
+
+        self::assertAttributeEquals([], 'source', $cfp);
+
+        $cfp->addSource('foo');
+
+        self::assertAttributeEquals(['foo'], 'source', $cfp);
+
+        $cfp->addSource('bar');
+
+        self::assertAttributeEquals(['foo', 'bar'], 'source', $cfp);
+
+        $cfp->addSource('foo');
+
+        self::assertAttributeEquals(['foo', 'bar'], 'source', $cfp);
+    }
 }
