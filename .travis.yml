@@ -23,9 +23,6 @@ jobs:
     php: 7.2
     script:
     - composer cs-check
-  - stage: test
-    script:
-    - composer test
   - stage: coverage
     if: branch = master AND type = push
     php: 7.2
@@ -43,7 +40,8 @@ jobs:
     - openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv -in deploy-key.enc -out deploy-key -d && chmod 600 deploy-key;
     - ./vendor/bin/phing deploy;
 
-
+script:
+- composer test
 
 before_install:
 - if [[ $DEPS == 'latest' ]]; then travis_retry composer update ; fi
@@ -52,4 +50,3 @@ before_install:
 
 install:
 - travis_retry composer install --no-interaction --ignore-platform-reqs
-
