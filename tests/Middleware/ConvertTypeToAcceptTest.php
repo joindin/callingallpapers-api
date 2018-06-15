@@ -28,8 +28,9 @@
 namespace CallingallpapersTest\Api\Middleware;
 
 use Callingallpapers\Api\Middleware\ConvertTypeToAccept;
+use PHPUnit\Framework\TestCase;
 
-class ConvertTypeToAcceptTest extends \PHPUnit_Framework_TestCase
+class ConvertTypeToAcceptTest extends TestCase
 {
     /**
      * @dataProvider responseIsUnchangedWithoutTypeParameterProvider
