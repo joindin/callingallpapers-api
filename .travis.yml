@@ -35,14 +35,10 @@ jobs:
     - composer sendcoverage
   - stage: deploy
     if: type = push AND branch = master
-    script: skip
-    deploy:
-    - provider: script
-      skip_cleanup: true
-      script:
-      - openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv -in deploy-key.enc -out deploy-key -d && chmod 600 deploy-key;
-      - ./vendor/bin/phing deploy;
-      
+    script:
+    - openssl aes-256-cbc -K $encrypted_944d199e46d0_key -iv $encrypted_944d199e46d0_iv -in deploy-key.enc -out deploy-key -d && chmod 600 deploy-key;
+    - ./vendor/bin/phing deploy;
+
 script:
 - composer test
 
