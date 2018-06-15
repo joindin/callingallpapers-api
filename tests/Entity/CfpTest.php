@@ -36,6 +36,5 @@ final class CfpTest extends \PHPUnit_Framework_TestCase
         $cfp->addSource('foo');
 
         self::assertAttributeEquals(['foo', 'bar'], 'source', $cfp);
-
     }
 }
