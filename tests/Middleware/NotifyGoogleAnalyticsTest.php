@@ -27,13 +27,14 @@
 namespace CallingallpapersTest\Api\Middleware;
 
 use Callingallpapers\Api\Middleware\NotifyGoogleAnalytics;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use TheIconic\Tracking\GoogleAnalytics\Analytics;
 use Mockery as M;
 
-class NotifyGoogleAnalyticsTest extends \PHPUnit_Framework_TestCase
+class NotifyGoogleAnalyticsTest extends TestCase
 {
     public function testThatInstantiationWorksAsExpected()
     {

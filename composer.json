@@ -10,6 +10,7 @@
         "org_heigl/clacks-middleware": "^1.1",
         "org_heigl/pdo_timezone_helper": "dev-master",
         "org_heigl/slim-json-helpers": "^1.0",
+        "php" : "^7.1",
         "sabre/vobject": "^4.0",
         "slim/slim": "^3.0",
         "slim/twig-view": "^2.0",
@@ -29,8 +30,8 @@
     "require-dev": {
         "mockery/mockery": "^0.9.7",
         "phing/phing": "^2.14",
-        "phpunit/dbunit": "^2.0",
-        "phpunit/phpunit": "^5.2"
+        "phpunit/dbunit": "^4.0",
+        "phpunit/phpunit": "^7.0"
     },
     "scripts" : {
         "cs-download" : [

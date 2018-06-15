@@ -31,8 +31,9 @@ use Callingallpapers\Api\Entity\Cfp;
 use Callingallpapers\Api\Service\CfpFactory;
 use GuzzleHttp\Client;
 use Mockery as M;
+use PHPUnit\Framework\TestCase;
 
-class CfpFactoryTest extends \PHPUnit_Framework_TestCase
+class CfpFactoryTest extends TestCase
 {
     /**
      * @dataProvider ProvideStrings

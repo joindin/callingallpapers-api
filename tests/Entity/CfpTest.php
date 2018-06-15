@@ -3,8 +3,9 @@
 namespace CallingallpapersTest\Api\Entity;
 
 use Callingallpapers\Api\Entity\Cfp;
+use PHPUnit\Framework\TestCase;
 
-final class CfpTest extends \PHPUnit_Framework_TestCase
+final class CfpTest extends TestCase
 {
     /**
      * @test
