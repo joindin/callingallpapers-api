@@ -295,7 +295,7 @@ class Cfp
 
     public function addSource($source)
     {
-        if (! in_array($source, $this->source[])) {
+        if (! in_array($source, $this->source)) {
             $this->source[] = $source;
         }
     }
