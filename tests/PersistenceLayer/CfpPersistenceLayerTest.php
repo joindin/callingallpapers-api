@@ -88,9 +88,12 @@ class CfpPersistenceLayerTest extends TestCase
 CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
 ');
             }
-            $this->conn = $this->createDefaultDBConnection(self::$pdo,
-                $GLOBALS['DB_NAME']);
+            $this->conn = $this->createDefaultDBConnection(
+                self::$pdo,
+                $GLOBALS['DB_NAME']
+            );
         }
+
         return $this->conn;
     }
 
