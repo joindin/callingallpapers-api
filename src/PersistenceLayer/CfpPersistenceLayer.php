@@ -31,6 +31,7 @@
 
 namespace Callingallpapers\Api\PersistenceLayer;
 
+use function array_filter;
 use Callingallpapers\Api\Entity\Cfp;
 use Camel\CaseTransformer;
 use Camel\Format\CamelCase;
@@ -70,8 +71,8 @@ class CfpPersistenceLayer
         if ($cfp->getDateCfpStart()->getTimestamp() < 10000) {
             $cfp->setDateCfpStart(new \DateTimeImmutable());
         }
-        $statement = 'INSERT into `cfp`(`dateCfpStart`, `dateCfpEnd`, `dateEventStart`, `dateEventEnd`, `name`, `uri`, `hash`, `timezone`, `description`, `eventUri`, `iconUri`, `latitude`, `longitude`, `location`, `tags`, `lastUpdate`) ' .
-                     'VALUES (:dateCfpStart, :dateCfpEnd, :dateEventStart, :dateEventEnd, :name, :uri, :hash, :timezone, :description, :eventUri, :iconUri, :latitude, :longitude, :location, :tags, :lastUpdate);';
+        $statement = 'INSERT into `cfp`(`dateCfpStart`, `dateCfpEnd`, `dateEventStart`, `dateEventEnd`, `name`, `uri`, `hash`, `timezone`, `description`, `eventUri`, `iconUri`, `latitude`, `longitude`, `location`, `tags`, `source`, `lastUpdate`) ' .
+                     'VALUES (:dateCfpStart, :dateCfpEnd, :dateEventStart, :dateEventEnd, :name, :uri, :hash, :timezone, :description, :eventUri, :iconUri, :latitude, :longitude, :location, :tags, :source, :lastUpdate);';
         $statement = $this->pdo->prepare($statement);
 
         $values = [
@@ -90,6 +91,7 @@ class CfpPersistenceLayer
             'longitude'      => $cfp->getLongitude(),
             'location'       => $cfp->getLocation(),
             'tags'           => implode(',', $cfp->getTags()),
+            'source'         => implode(',', array_filter(array_unique($cfp->getSource()))),
             'lastUpdate'     => (new \DateTime('now', new \DateTimezone('UTC')))->format('c'),
         ];
 
