@@ -31,6 +31,7 @@
 
 namespace Callingallpapers\Api\PersistenceLayer;
 
+use function array_filter;
 use Callingallpapers\Api\Entity\Cfp;
 use Camel\CaseTransformer;
 use Camel\Format\CamelCase;
@@ -90,7 +91,7 @@ class CfpPersistenceLayer
             'longitude'      => $cfp->getLongitude(),
             'location'       => $cfp->getLocation(),
             'tags'           => implode(',', $cfp->getTags()),
-            'source'         => $cfp->getSource(),
+            'source'         => implode(',', array_filter(array_unique($cfp->getSource()))),
             'lastUpdate'     => (new \DateTime('now', new \DateTimezone('UTC')))->format('c'),
         ];
 
