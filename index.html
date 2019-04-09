@@ -99,7 +99,7 @@
       </span>
     </a>
     <div class="tocify-wrapper">
-      <img src="images/logo.png" />
+      <h1 class="highlight"><span class="cp">CallingAllPapers</span></h1>
         <div class="lang-selector">
               <a href="#" data-language-name="php">php</a>
         </div>
@@ -132,9 +132,9 @@ and you can switch the programming language of the examples with the tabs in the
 <blockquote>
 <p>To authorize, use this code:</p>
 </blockquote>
-<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
-    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
-]]);
+<pre class="highlight php"><code><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GuzzleHttp\Client</span><span class="p">([</span><span class="s2">'header'</span> <span class="p">= [</span>
+    <span class="s2">'Authorization'</span> <span class="o">=&gt;</span> <span class="s2">'Bearer myVeryOwnApiKey'</span><span class="p">,</span>
+<span class="p">]]);</span>
 </code></pre>
 
 <blockquote>
@@ -147,21 +147,37 @@ request your Callingallpapers-API key by sending an Email to
 together with a short description what you&rsquo;d like to do with it.</p>
 
 <p>Callingallpapers expects for the API key to be included in all API requests to
-the server (except GET) in a header that looks like the following:</p>
+the server (except <code>GET</code>) in a header that looks like the following:</p>
 
-<p><code class="prettyprint">Authorization: myVEryOnwApiKey</code></p>
+<p><code class="prettyprint">Authorization: myVeryOnwApiKey</code></p>
 
 <aside class="notice">
 Remember to replace <code>myVeryOwnApiKey</code> with your personal API key.
 </aside>
 
+<h1 id="output-formats">Output formats</h1>
+
+<pre class="highlight php"><code><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GuzzleHttp\Client</span><span class="p">([</span>
+    <span class="s2">'Accept'</span> <span class="o">=&gt;</span> <span class="s2">'text/calendar'</span><span class="p">,</span>
+<span class="p">]]);</span>
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s2">'get'</span><span class="p">,</span> <span class="nv">'https://api.callingallpapers.com/v1/cfp'</span><span class="p">);</span>
+<span class="c1">// Handle iCal file</span>
+</code></pre>
+
+<p>The following output formats are available and can be specified with an <code>Accept</code>
+request header:</p>
+<ul>
+  <li><code>application/rss+xml</code></li>
+  <li><code>text/calendar</code></li>
+  <li><code>text/html</code></li>
+</ul>
+<p>If an <code>Accept</code> header is not specified it will default to <code>application/json</code></p>
+
 <h1 id="calls-for-papers">Calls for Papers</h1>
 
 <h2 id="get-all-calls-for-papers">Get All Calls for Papers</h2>
-<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
-    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
-]]);
-$result = $client-&gt;request('GET', 'https://example.com/v1/cfp');
+<pre class="highlight php"><code>$client = new GuzzleHttp\Client();
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s2">'get'</span><span class="p">,</span> <span class="nv">'https://api.callingallpapers.com/v1/cfp'</span><span class="p">);</span>
 </code></pre>
 
 <blockquote>
@@ -175,8 +191,8 @@ $result = $client-&gt;request('GET', 'https://example.com/v1/cfp');
       </span><span class="p">},</span><span class="w">
       </span><span class="nt">"dateCfpEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-02T13:24:35+02:00"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"dateCfpStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-01-01T12:13:14+02:00"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"dateEventEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-001-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"dateEventStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-001-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateEventEnd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"dateEventStart"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2016-11-30T00:00:00+00:00"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"description"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="nt">"eventUri"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
       </span><span class="nt">"iconUri"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span><span class="w">
@@ -200,9 +216,9 @@ $result = $client-&gt;request('GET', 'https://example.com/v1/cfp');
 
 <p>This endpoint retrieves all CfPs.</p>
 
-<h3 id="http-request">HTTP Request</h3>
+<h3 id="get-all-calls-for-papers-http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET http://example.com/v1/cfp</code></p>
+<p><code class="prettyprint">GET https://api.callingallpapers.com/v1/cfp</code></p>
 
 <h3 id="content-types">Content-Types</h3>
 
@@ -237,10 +253,10 @@ $result = $client-&gt;request('GET', 'https://example.com/v1/cfp');
 <p>Not yet implemented!</p>
 
 <h2 id="get-a-specific-cfp">Get a Specific CfP</h2>
-<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
-    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
-]]);
-$result = $client-&gt;request('GET', 'https://example.com/v1/cfp/<span class="nt">&lt;HASH&gt;</span>');
+<pre class="highlight php"><code><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GuzzleHttp\Client</span><span class="p">([</span><span class="s2">'header'</span> <span class="p">= [</span>
+    <span class="s2">'Authorization'</span> <span class="o">=&gt;</span> <span class="s2">'Bearer myVeryOwnApiKey'</span><span class="p">,</span>
+<span class="p">]]);</span>
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s2">'get'</span><span class="p">,</span> <span class="nv">'https://api.callingallpapers.com/v1/cfp/<span class="nt">&lt;HASH&gt;</span>'</span><span class="p">);</span>
 </code></pre>
 
 <blockquote>
@@ -281,21 +297,21 @@ $result = $client-&gt;request('GET', 'https://example.com/v1/cfp/<span class="nt
 the sha1-sum of the URI of the event that opened the CfP.</p>
 
 <h2 id="create-a-new-cfp">Create a new CfP</h2>
-<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
-    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
-]]);
-$result = $client-&gt;request('POST', 'https://example.com/v1/cfp', [
-    'form_params' =&gt; <span class="nt">&lt;POST-Parameters&gt;</span>
-]);
+<pre class="highlight php"><code><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GuzzleHttp\Client</span><span class="p">([</span><span class="s2">'header'</span> <span class="p">= [</span>
+    <span class="s2">'Authorization'</span> <span class="o">=&gt;</span> <span class="s2">'Bearer myVeryOwnApiKey'</span><span class="p">,</span>
+<span class="p">]]);</span>
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s2">'POST'</span><span class="p">,</span> <span class="nv">'https://api.callingallpapers.com/v1/cfp/'</span><span class="p">, [</span>
+    <span class="s2">'form_params'</span> <span class="o">=&gt;</span> <span class="nt">&lt;POST-Parameters&gt;</span>
+<span class="p">]]);</span>
 </code></pre>
 
 <blockquote>
 <p>The above command returns a Location Header with the URL of the newly created resource</p>
 </blockquote>
 
-<h3 id="http-request">HTTP Request</h3>
+<h3 id="create-a-new-cfp-http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">POST http://example.com/v1/cfp</code></p>
+<p><code class="prettyprint">POST https://api.callingallpapers.com/v1/cfp</code></p>
 
 <h3 id="post-parameters">POST Parameters</h3>
 
@@ -379,21 +395,21 @@ $result = $client-&gt;request('POST', 'https://example.com/v1/cfp', [
 </tbody></table>
 
 <h2 id="update-an-existing-cfp">Update an existing CfP</h2>
-<pre class="highlight php"><code>$client = new GuzzleHttp\Client(['header' =&gt; [
-    'Authorize' =&gt; 'Bearer myVeryOwnApiKey',
-]]);
-$result = $client-&gt;request('PUT', 'https://example.com/v1/cfp/<span class="nt">&lt;HASH&gt;</span>', [
-    'form_params' =&gt; <span class="nt">&lt;PUT-Parameters&gt;</span>
-]);
+<pre class="highlight php"><code><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GuzzleHttp\Client</span><span class="p">([</span><span class="s2">'header'</span> <span class="p">= [</span>
+    <span class="s2">'Authorization'</span> <span class="o">=&gt;</span> <span class="s2">'Bearer myVeryOwnApiKey'</span><span class="p">,</span>
+<span class="p">]]);</span>
+<span class="nv">$result</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s2">'PUT'</span><span class="p">,</span> <span class="nv">'https://api.callingallpapers.com/v1/cfp/<span class="nt">&lt;HASH&gt;</span>'</span><span class="p">, [</span>
+    <span class="s2">'form_params'</span> <span class="o">=&gt;</span> <span class="nt">&lt;PUT-Parameters&gt;</span>
+<span class="p">]]);</span>
 </code></pre>
 
 <blockquote>
 <p>The above command returns a Location Header with the URL of the newly created resource</p>
 </blockquote>
 
-<h3 id="http-request">HTTP Request</h3>
+<h3 id="update-an-existing-cfp-http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">PUT http://example.com/v1/cfp/&lt;HASH&gt;</code></p>
+<p><code class="prettyprint">PUT https://api.callingallpapers.com/v1/cfp/&lt;HASH&gt;</code></p>
 
 <h3 id="put-parameters">PUT Parameters</h3>
 
@@ -478,9 +494,7 @@ $result = $client-&gt;request('PUT', 'https://example.com/v1/cfp/<span class="nt
 
           <h1 id="errors">Errors</h1>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<p>The API uses the following error codes:</p>
 
 <table><thead>
 <tr>
@@ -490,39 +504,35 @@ $result = $client-&gt;request('PUT', 'https://example.com/v1/cfp/<span class="nt
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>Bad Request &ndash; There was a problem with your request</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>Unauthorized &ndash; Authentication failed.  See the <code>WWW-Authenticate</code> response header for details</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>Forbidden &ndash; The requested resource is not allowed</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>Not Found &ndash; The specified CfP could not be found</td>
 </tr>
 <tr>
 <td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+<td>Method Not Allowed &ndash; You tried to access an endpoint with an invalid method</td>
 </tr>
 <tr>
 <td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t supported</td>
 </tr>
 <tr>
 <td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
+<td>Gone &ndash; The CfP requested has been removed from our servers</td>
 </tr>
 <tr>
 <td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+<td>Too Many Requests &ndash; You&rsquo;re requesting too many CfPs! Slow down!</td>
 </tr>
 <tr>
 <td>500</td>
@@ -530,7 +540,7 @@ $result = $client-&gt;request('PUT', 'https://example.com/v1/cfp/<span class="nt
 </tr>
 <tr>
 <td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintenance. Please try again later.</td>
 </tr>
 </tbody></table>
 
