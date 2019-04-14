@@ -26,22 +26,34 @@
  * @since     18.01.2016
  * @link      http://github.com/heiglandreas/callingallpapers
  *#}
-{% macro recursiveItem(arry) %}
-{% for key, value in arry %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Calling All Papers</title>
+<style type="text/css">
+dl:not(:last-of-type) {
+  border-bottom: 1px solid #555;
+  padding-bottom: 1em;
+}
+</style>
+</head>
+<body>
+
+{% for pairs in cfps %}
+<h1>{{ pairs.name }}</h1>
 <dl>
-  <dt>
-  {{ key }}:
-  </dt>
-  <dd>
-  {% if value is iterable %}
-    {{ _self.recursiveItem(value) }}
-  {% else %}
-    {{ value }}
-  {% endif %}
-  </dd>
+  {% for key, value in pairs %}
+    <dt>
+      {{ key }}:
+    </dt>
+    <dd>
+      {{ value|join(', ', ' and ') }}
+    </dd>
+  {% endfor %}
 </dl>
 {% endfor %}
-{% endmacro %}
 
-{% import _self as rec %}
-{{ rec.recursiveItem(cfps) }}
+</body>
+</html>
