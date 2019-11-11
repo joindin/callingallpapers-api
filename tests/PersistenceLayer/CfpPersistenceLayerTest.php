@@ -35,7 +35,6 @@ use Callingallpapers\Api\Entity\Cfp;
 use Callingallpapers\Api\Entity\CfpList;
 use Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer;
 use Org_Heigl\PdoTimezoneHelper\Handler\PdoTimezoneHandlerInterface;
-use Org_Heigl\PdoTimezoneHelper\PdoTimezoneHelper;
 use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\Framework\TestCase;
 
@@ -109,7 +108,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
     {
         $cpl = new CfpPersistenceLayer(self::$pdo, $this->timezoneHelper);
 
-        $this->assertInstanceof('Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer', $cpl);
+        $this->assertInstanceof(CfpPersistenceLayer::class, $cpl);
     }
 
     public function testCreateEntry()
@@ -141,7 +140,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $cpl = new CfpPersistenceLayer(self::$pdo, $this->timezoneHelper);
 
         $content = $cpl->select();
-        $this->assertInstanceof('Callingallpapers\Api\Entity\CfpList', $content);
+        $this->assertInstanceof(CfpList::class, $content);
         $this->assertEquals(2, $content->count());
     }
 
@@ -151,7 +150,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $cpl = new CfpPersistenceLayer(self::$pdo, $this->timezoneHelper);
 
         $content = $cpl->select('ff');
-        $this->assertInstanceof('Callingallpapers\Api\Entity\CfpList', $content);
+        $this->assertInstanceof(CfpList::class, $content);
         $this->assertEquals(1, $content->count());
     }
 
@@ -164,7 +163,7 @@ CREATE UNIQUE INDEX cfp_hash_uindex ON cfp (hash);
         $cpl = new CfpPersistenceLayer(self::$pdo, $this->timezoneHelper);
 
         $content = $cpl->select('fg');
-        $this->assertInstanceof('Callingallpapers\Api\Entity\CfpList', $content);
+        $this->assertInstanceof(CfpList::class, $content);
         $this->assertEquals(0, $content->count());
     }
 
