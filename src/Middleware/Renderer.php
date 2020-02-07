@@ -57,6 +57,12 @@ class Renderer
         callable $next
     ) {
         $accept = $request->getHeader('Accept');
+        if ($accept === []) {
+            $jsonHelpers = new JsonHelpers($this->app->getContainer());
+            $jsonHelpers->registerResponseView();
+            $jsonHelpers->registerErrorHandlers();
+            return $next($request, $response);
+        }
 
         if (strpos($accept[0], 'text/calendar') !== false) {
             $container         = $this->app->getContainer();
