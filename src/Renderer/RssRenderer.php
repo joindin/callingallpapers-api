@@ -70,13 +70,17 @@ class RssRenderer
                 $entry->setDateModified(new \DateTime($cfp['dateCfpEnd']));
                 $entry->setDateCreated(new \DateTime($cfp['dateCfpEnd']));
                 $entry->setDescription(sprintf(
-                    'CfP for %3$s runs from %1$s to %2$s',
+                    'CfP for %3$s runs from %1$s to %2$s. The event runs from %4$s to %5$s in %6$s',
                     (new \DateTime($cfp['dateCfpStart']))->format('c'),
                     (new \DateTime($cfp['dateCfpEnd']))->format('c'),
-                    $cfp['name']
+                    $cfp['name'],
+                    (new \DateTime($cfp['dateEventStart']))->format('c'),
+                    (new \DateTime($cfp['dateEventEnd']))->format('c'),
+                    $cfp['location']
                 ));
                 $entry->setContent($cfp['description']);
-
+                $entry->setId($cfp['eventUri']);
+                
                 $feed->addEntry($entry);
             } catch (\Exception $e) {
             }
