@@ -9,7 +9,7 @@
         "monolog/monolog": "^1.17",
         "org_heigl/clacks-middleware": "^1.1",
         "org_heigl/pdo_timezone_helper": "dev-master",
-        "org_heigl/slim-json-helpers": "^1.0",
+        "org_heigl/slim-json-helpers": "^1.1.0",
         "php" : "^7.1",
         "sabre/vobject": "^4.0",
         "slim/slim": "^3.0",
