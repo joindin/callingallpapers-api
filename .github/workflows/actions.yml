@@ -103,6 +103,6 @@ jobs:
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOYMENT_KEY }}
         run: |
-          echo $DEPLOY_KEY > deploy-key
+          echo -e "$DEPLOY_KEY" > deploy-key
           chmod 600 deploy-key
           phing deploy
