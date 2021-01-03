@@ -3,19 +3,19 @@
     "description" : "The API powering callingallpapers.com",
     "license": "MIT",
     "require": {
-        "akrabat/ip-address-middleware": "^1.0",
+        "akrabat/ip-address-middleware": "^2.0",
         "guzzlehttp/guzzle": "^6.2",
         "mattketmo/camel": "^1.1",
         "monolog/monolog": "^1.17",
         "org_heigl/clacks-middleware": "^1.1",
         "org_heigl/pdo_timezone_helper": "dev-master",
         "org_heigl/slim-json-helpers": "^1.1.0",
-        "php" : "^7.1",
+        "php" : "^7.2 | ^8.0",
         "sabre/vobject": "^4.0",
         "slim/slim": "^3.0",
         "slim/twig-view": "^2.0",
         "theiconic/php-ga-measurement-protocol": "^2.1",
-        "zendframework/zend-feed": "^2.7"
+        "laminas/laminas-feed": "^2.7"
     },
     "autoload" : {
         "psr-4": {
@@ -30,8 +30,7 @@
     "require-dev": {
         "mockery/mockery": "^0.9.7",
         "phing/phing": "^2.14",
-        "phpunit/dbunit": "^4.0",
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^7.0 | ^9.0"
     },
     "scripts" : {
         "cs-download" : [

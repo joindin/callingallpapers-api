@@ -29,9 +29,13 @@ namespace CallingallpapersTest\Service;
 
 use Callingallpapers\Api\Entity\Cfp;
 use Callingallpapers\Api\Service\CfpFactory;
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
 use GuzzleHttp\Client;
-use Mockery as M;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 class CfpFactoryTest extends TestCase
 {
@@ -43,15 +47,14 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setName($cfp, ['name' => $value]);
 
-        $this->assertAttributeEquals($expected, 'name', $cfp);
+        self::assertEquals($expected, $cfp->getName());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThatSettingNameFailsWithMissingArrayEntry()
     {
         $cfp = new Cfp();
+
+        self::expectException(InvalidArgumentException::class);
         CfpFactory::setName($cfp, []);
     }
 
@@ -63,7 +66,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDescription($cfp, ['description' => $value]);
 
-        $this->assertAttributeEquals($expected, 'description', $cfp);
+        self::assertEquals($expected, $cfp->getDescription());
     }
 
     public function testThatSettingDescriptionWorksWithMissingArrayEntry()
@@ -71,7 +74,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDescription($cfp, []);
 
-        $this->assertAttributeEquals('', 'description', $cfp);
+        self::assertEquals('', $cfp->getDescription());
     }
 
     /**
@@ -82,7 +85,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setLocation($cfp, ['location' => $value]);
 
-        $this->assertAttributeEquals($expected, 'location', $cfp);
+        self::assertEquals($expected, $cfp->getLocation());
     }
 
     public function testThatSettingLocationWorksWithMissingArrayEntry()
@@ -90,7 +93,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setLocation($cfp, []);
 
-        $this->assertAttributeEquals('', 'location', $cfp);
+        self::assertEquals('', $cfp->getLocation());
     }
 
     /**
@@ -101,15 +104,14 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setTimezone($cfp, ['timezone' => 'Europe/Berlin']);
 
-        $this->assertAttributeEquals(new \DateTimeZone('Europe/Berlin'), 'timezone', $cfp);
+        self::assertEquals(new DateTimeZone('Europe/Berlin'), $cfp->getTimezone());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThatSettingTimezoneFailsWithMissingArrayEntry()
     {
         $cfp = new Cfp();
+
+        self::expectException(InvalidArgumentException::class);
         CfpFactory::setTimezone($cfp, []);
     }
 
@@ -119,9 +121,11 @@ class CfpFactoryTest extends TestCase
     public function testThatSettingTimezoneFailsWithInvalidArrayEntry()
     {
         $cfp = new Cfp();
+
+        self::expectException(Exception::class);
         CfpFactory::setTimezone($cfp, ['timezone' => 'foo']);
 
-        $this->assertAttributeEquals(new \DateTimeZone('Europe/Berlin'), 'timezone', $cfp);
+        self::assertEquals(new DateTimeZone('Europe/Berlin'), $cfp->getTimezone());
     }
 
     /**
@@ -132,7 +136,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateCfpStart($cfp, ['dateCfpStart' => $value]);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable($value), 'dateCfpStart', $cfp);
+        self::assertEquals(new DateTimeImmutable($value), $cfp->getDateCfpStart());
     }
 
     public function testThatSettingDateCfpStartWorksEvenWithMissingArrayEntry()
@@ -140,7 +144,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateCfpStart($cfp, []);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable('@0'), 'dateCfpStart', $cfp);
+        self::assertEquals(new DateTimeImmutable('@0'), $cfp->getDateCfpStart());
     }
 
     /**
@@ -151,15 +155,13 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateCfpEnd($cfp, ['dateCfpEnd' => $value]);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable($value), 'dateCfpEnd', $cfp);
+        self::assertEquals(new DateTimeImmutable($value), $cfp->getDateCfpEnd());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThatSettingDateCfpEndFailsWithMissingArrayEntry()
     {
         $cfp = new Cfp();
+        self::expectException(InvalidArgumentException::class);
         CfpFactory::setDateCfpEnd($cfp, []);
     }
 
@@ -171,7 +173,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateEventStart($cfp, ['dateEventStart' => $value]);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable($value), 'dateEventStart', $cfp);
+        self::assertEquals(new DateTimeImmutable($value), $cfp->getDateEventStart());
     }
 
     public function testThatSettingDateEventStartWorksWithMissingArrayEntry()
@@ -179,7 +181,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateEventStart($cfp, []);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable('0000-00-00 00:00:00+00:00'), 'dateEventStart', $cfp);
+        self::assertEquals(new DateTimeImmutable('0000-00-00 00:00:00+00:00'), $cfp->getDateEventStart());
     }
 
     /**
@@ -190,7 +192,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateEventEnd($cfp, ['dateEventEnd' => $value]);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable($value), 'dateEventEnd', $cfp);
+        self::assertEquals(new DateTimeImmutable($value), $cfp->getDateEventEnd());
     }
 
     public function testThatSettingDateEventEndWorksWithMissingArrayEntry()
@@ -198,7 +200,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setDateEventEnd($cfp, []);
 
-        $this->assertAttributeEquals(new \DateTimeImmutable('0000-00-00 00:00:00+00:00'), 'dateEventEnd', $cfp);
+        self::assertEquals(new DateTimeImmutable('0000-00-00 00:00:00+00:00'), $cfp->getDateEventEnd());
     }
 
     /**
@@ -209,15 +211,14 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setUri($cfp, ['uri' => $value]);
 
-        $this->assertAttributeEquals($expected, 'uri', $cfp);
+        self::assertEquals($expected, $cfp->getUri());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThatSettingUriFailsWithMissingArrayEntry()
     {
         $cfp = new Cfp();
+
+        self::expectException(InvalidArgumentException::class);
         CfpFactory::setUri($cfp, []);
     }
 
@@ -229,7 +230,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setEventUri($cfp, ['eventUri' => $value], new Client());
 
-        $this->assertAttributeEquals($expected, 'eventUri', $cfp);
+        self::assertEquals($expected, $cfp->getEventUri());
     }
 
     public function testThatSettingIconUriWorksWithMissingArrayEntry()
@@ -237,7 +238,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setIconUri($cfp, []);
 
-        $this->assertAttributeEquals('', 'iconUri', $cfp);
+        self::assertEquals('', $cfp->getIconUri());
     }
 
     /**
@@ -248,16 +249,15 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setIconUri($cfp, ['iconUri' => $value]);
 
-        $this->assertAttributeEquals($expected, 'iconUri', $cfp);
+        self::assertEquals($expected, $cfp->getIconUri());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testThatSettingEventUriFailsWithMissingArrayEntry()
     {
         $cfp = new Cfp();
-        CfpFactory::setEventUri($cfp, [], M::mock(Client::class));
+        self::expectException(InvalidArgumentException::class);
+
+        CfpFactory::setEventUri($cfp, [], $this->createMock(Client::class));
     }
 
 
@@ -269,7 +269,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setTags($cfp, ['tags' => $value]);
 
-        $this->assertAttributeEquals($expected, 'tags', $cfp);
+        self::assertEquals($expected, $cfp->getTags());
     }
 
     public function testThatSettingTagsWorksWithMissingArrayEntry()
@@ -277,7 +277,7 @@ class CfpFactoryTest extends TestCase
         $cfp = new Cfp();
         CfpFactory::setTags($cfp, []);
 
-        $this->assertAttributeEquals([], 'tags', $cfp);
+        self::assertEquals([], $cfp->getTags());
     }
 
     public function provideStrings()
@@ -325,25 +325,27 @@ class CfpFactoryTest extends TestCase
     {
         $cfp = new Cfp();
         CfpFactory::setGeolocation($cfp, ['longitude' => '']);
-        $this->assertAttributeEquals(0.0, 'longitude', $cfp);
-        $this->assertAttributeEquals(0.0, 'latitude', $cfp);
+
+        self::assertEquals(0.0, $cfp->getLongitude());
+        self::assertEquals(0.0, $cfp->getLatitude());
     }
 
     public function testThatSettingGeolocationWithoutLongitudeFails()
     {
         $cfp = new Cfp();
         CfpFactory::setGeolocation($cfp, ['latitude' => '']);
-        $this->assertAttributeEquals(0.0, 'longitude', $cfp);
-        $this->assertAttributeEquals(0.0, 'latitude', $cfp);
+
+        self::assertEquals(0.0, $cfp->getLongitude());
+        self::assertEquals(0.0, $cfp->getLatitude());
     }
 
     /**
-     * @expectedException \UnexpectedValueException
      * @dataProvider provideFaultyGeolocations
      */
     public function testThatSettingGeolocationFailsWithValuesOutOfRange($lat, $lon)
     {
         $cfp = new Cfp();
+        self::expectException(UnexpectedValueException::class);
         CfpFactory::setGeolocation($cfp, [
             'latitude' => $lat,
             'longitude' => $lon,
@@ -361,15 +363,15 @@ class CfpFactoryTest extends TestCase
             'latitude' => $lat,
             'longitude' => $lon,
         ]);
-        $this->assertAttributeEquals($expectedLon, 'longitude', $cfp);
-        $this->assertAttributeEquals($expectedLat, 'latitude', $cfp);
+        self::assertEquals($expectedLon, $cfp->getLongitude());
+        self::assertEquals($expectedLat, $cfp->getLatitude());
     }
 
     public function provideGeolocations()
     {
         return [
             [1.0, 1.0, '1.0', '1.0'],
-            ['', 10.0, 'foo', '1,0'],
+            [0.0, 10.0, 'foo', '1,0'],
         ];
     }
 
