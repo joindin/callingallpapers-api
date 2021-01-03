@@ -209,20 +209,20 @@ class CfpFactory
             return;
         }
 
-        $latitude  = filter_var(
+        $latitude  = (float) filter_var(
             $array['latitude'],
             FILTER_SANITIZE_NUMBER_FLOAT,
             FILTER_FLAG_ALLOW_FRACTION
         );
-        $longitude = filter_var(
+        $longitude = (float) filter_var(
             $array['longitude'],
             FILTER_SANITIZE_NUMBER_FLOAT,
             FILTER_FLAG_ALLOW_FRACTION
         );
 
-        if ($latitude > 90 || $latitude < - 90) {
+        if ($latitude > 90 || $latitude < -90) {
             throw new \UnexpectedValueException(sprintf(
-                'latitude has to be within a range of -90.0 to 90.0 bus is %1$f',
+                'latitude has to be within a range of -90.0 to 90.0 but is %1$f',
                 $latitude
             ), 400);
         }

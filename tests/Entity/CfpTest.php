@@ -24,18 +24,18 @@ final class CfpTest extends TestCase
     {
         $cfp = new Cfp();
 
-        self::assertAttributeEquals([], 'source', $cfp);
+        self::assertEquals([], $cfp->getSource());
 
         $cfp->addSource('foo');
 
-        self::assertAttributeEquals(['foo'], 'source', $cfp);
+        self::assertEquals(['foo'], $cfp->getSource());
 
         $cfp->addSource('bar');
 
-        self::assertAttributeEquals(['foo', 'bar'], 'source', $cfp);
+        self::assertEquals(['foo', 'bar'], $cfp->getSource());
 
         $cfp->addSource('foo');
 
-        self::assertAttributeEquals(['foo', 'bar'], 'source', $cfp);
+        self::assertEquals(['foo', 'bar'], $cfp->getSource());
     }
 }
