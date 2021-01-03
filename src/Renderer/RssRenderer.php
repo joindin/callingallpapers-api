@@ -34,15 +34,7 @@ use Zend\Feed\Writer\Feed;
 
 class RssRenderer
 {
-    /**
-     *
-     * @param Response $response
-     * @param array $data
-     * @param int $status
-     *
-     * @return ResponseInterface
-     */
-    public function render(ResponseInterface $response, array $data = [], $status = 200)
+    public function render(ResponseInterface $response, array $data = [], int $status = 200): ResponseInterface
     {
         $feed = new Feed();
         $feed->setTitle('Calling all Papers');
@@ -80,7 +72,7 @@ class RssRenderer
                 ));
                 $entry->setContent($cfp['description']);
                 $entry->setId($cfp['eventUri']);
-                
+
                 $feed->addEntry($entry);
             } catch (\Exception $e) {
             }

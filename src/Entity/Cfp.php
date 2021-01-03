@@ -27,6 +27,9 @@
 
 namespace Callingallpapers\Api\Entity;
 
+use DateTimeImmutable;
+use DateTimeZone;
+
 class Cfp
 {
     /**
@@ -71,12 +74,12 @@ class Cfp
     protected $description;
 
     /**
-     * @var \DateTimeImmutable The date the event starts at
+     * @var DateTimeImmutable The date the event starts at
      */
     protected $dateEventStart;
 
     /**
-     * @var \DateTimeImmutable The date the event ends at
+     * @var DateTimeImmutable The date the event ends at
      */
     protected $dateEventEnd;
 
@@ -91,7 +94,7 @@ class Cfp
     protected $eventUri;
 
     /**
-     * @var \DateTimeZone The Timezone of the CFP-Dates
+     * @var DateTimeZone The Timezone of the CFP-Dates
      */
     protected $timezone;
 
@@ -101,9 +104,9 @@ class Cfp
     protected $tags = [];
 
     /**
-     * @var \DateTimeInterface Date of the last change
+     * @var DateTimeImmutable Date of the last change
      */
-    protected $lastUpdate = null;
+    protected $lastUpdate;
 
     /**
      * @var array The sources of a CfP
@@ -112,11 +115,12 @@ class Cfp
 
     public function __construct()
     {
-        $this->dateCfpStart   = new \DateTimeImmutable('@0');
-        $this->dateCfpEnd     = new \DateTimeImmutable();
-        $this->dateEventStart = new \DateTimeImmutable();
-        $this->dateEventEnd   = new \DateTimeImmutable();
-        $this->timezone       = new \DateTimezone('UTC');
+        $this->dateCfpStart   = new DateTimeImmutable('@0');
+        $this->dateCfpEnd     = new DateTimeImmutable();
+        $this->dateEventStart = new DateTimeImmutable();
+        $this->dateEventEnd   = new DateTimeImmutable();
+        $this->lastUpdate     = new DateTimeImmutable();
+        $this->timezone       = new DateTimezone('UTC');
     }
 
     public function setUri($uri)
@@ -204,7 +208,7 @@ class Cfp
         return $this->description;
     }
 
-    public function setDateEventStart(\DateTimeInterface $startDate)
+    public function setDateEventStart(DateTimeImmutable $startDate)
     {
         $this->dateEventStart = $startDate;
     }
@@ -214,7 +218,7 @@ class Cfp
         return $this->dateEventStart;
     }
 
-    public function setDateEventEnd(\DateTimeInterface $endDate)
+    public function setDateEventEnd(DateTimeImmutable $endDate)
     {
         $this->dateEventEnd = $endDate;
     }
@@ -273,12 +277,12 @@ class Cfp
         return $this->tags;
     }
 
-    public function getLastUdated()
+    public function getLastUdated(): DateTimeImmutable
     {
         return $this->lastUpdate;
     }
 
-    public function setLastUpdated(\DateTimeinterface $date)
+    public function setLastUpdated(DateTimeImmutable $date)
     {
         $this->lastUpdate = $date;
     }

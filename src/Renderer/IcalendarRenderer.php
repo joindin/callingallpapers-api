@@ -34,15 +34,7 @@ use Sabre\VObject\Component\VCalendar;
 
 class IcalendarRenderer
 {
-    /**
-     *
-     * @param Response $response
-     * @param array $data
-     * @param int $status
-     *
-     * @return ResponseInterface
-     */
-    public function render(ResponseInterface $response, array $data = [], $status = 200)
+    public function render(ResponseInterface $response, array $data = [], int $status = 200): ResponseInterface
     {
         $icalendar = new VCalendar();
         if (! isset($data['cfps'])) {
