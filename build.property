@@ -2,7 +2,7 @@
 ;;
 ;;
 ; deploy.target
-deploy.target = 37.139.26.154
+deploy.target = 146.190.127.108
 ;
 ; deploy.user
 deploy.user = deploy
