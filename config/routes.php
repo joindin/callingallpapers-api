@@ -52,6 +52,7 @@ $app->post('/v1/cfp', function(
         $cfp = $cfpFactory->createCfp($params, $app->getContainer()['client']);
     } catch (\Exception $e) {
         error_log($e->getMessage() . "\n" . $e->getTraceAsString());
+        return $response->withStatus(404, 'The CfP could not be created');
     }
     $cpl = new \Callingallpapers\Api\PersistenceLayer\CfpPersistenceLayer(
         $app->getContainer()['pdo'],
